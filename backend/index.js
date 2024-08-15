@@ -13,23 +13,33 @@ const handleError = (res, error, message) => {
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: ['http://localhost:3000', 'https://hilarious-smakager-cd1e44.netlify.app', 'https://task-manager-app-fwetzuxo.devinapps.com', 'https://magnificent-chebakia-be06b9.netlify.app'],
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:34793', 'https://hilarious-smakager-cd1e44.netlify.app', 'https://task-manager-app-fwetzuxo.devinapps.com', 'https://magnificent-chebakia-be06b9.netlify.app'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.error(`CORS error: Origin ${origin} not allowed`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 204
-}));
+};
+app.use(cors(corsOptions));
+console.log('CORS configuration:', corsOptions);
 
 // CORS Preflight
-app.options('*', cors());
+app.options('*', cors(corsOptions));
 
 // SQLite database setup
 let db;
 
 // Redis client setup
 const redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://task_manager_redis:6379',
+  url: process.env.REDIS_URL || 'redis://redis:6379',
   socket: {
     reconnectStrategy: (retries) => {
       const maxRetryAttempts = parseInt(process.env.REDIS_RETRY_ATTEMPTS) || 10;
@@ -42,6 +52,10 @@ const redisClient = createClient({
     },
   },
 });
+
+console.log('Connecting to Redis at:', process.env.REDIS_URL || 'redis://redis:6379');
+
+console.log('Redis URL:', process.env.REDIS_URL || 'redis://task_manager_redis:6379');
 
 let isRedisAvailable = false;
 
@@ -349,7 +363,12 @@ const initializeAndStartServer = async () => {
       const server = app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
         console.log('Server initialization complete.');
-        console.log('CORS configuration:', app._router.stack.filter(r => r.name === 'corsMiddleware')[0].handle);
+        const corsMiddleware = app._router.stack.find(r => r.name === 'corsMiddleware');
+        if (corsMiddleware) {
+          console.log('CORS configuration:', corsMiddleware.handle);
+        } else {
+          console.warn('CORS middleware not found in the application stack.');
+        }
         resolve();
       });
 
@@ -365,6 +384,9 @@ const initializeAndStartServer = async () => {
     console.error('Failed to initialize server:', error);
     if (error.name === 'CORSError') {
       console.error('CORS configuration error. Please check your CORS settings.');
+      console.error('Allowed origins:', app.get('cors').origin);
+      console.error('Allowed methods:', app.get('cors').methods);
+      console.error('Allowed headers:', app.get('cors').allowedHeaders);
     }
     console.error('Server initialization failed. Exiting process.');
     process.exit(1);
