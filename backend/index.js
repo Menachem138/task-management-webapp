@@ -1,9 +1,12 @@
 const express = require('express');
 const redis = require('redis');
 const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
+
+app.use(cors());
 
 // Redis setup
 const redisClient = redis.createClient();
