@@ -20,9 +20,15 @@ const corsOptions = {
       'https://hilarious-smakager-cd1e44.netlify.app',
       'https://task-manager-app-fwetzuxo.devinapps.com',
       'https://magnificent-chebakia-be06b9.netlify.app',
-      'https://fascinating-dragon-119dac.netlify.app'
+      'https://fascinating-dragon-119dac.netlify.app',
+      'http://localhost:3000',
+      'http://localhost:3002',
+      'http://clinquant-taiyaki-334b29.netlify.app',
+      'https://clinquant-taiyaki-334b29.netlify.app',
+      'http://task-manager-backend-url.com',
+      'https://backend-deployed-url.com'
     ];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
       console.error(`CORS error: Origin ${origin} not allowed`);
@@ -45,7 +51,7 @@ let db;
 
 // Redis client setup
 const redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://task_manager_redis:6379', // Use the service name defined in docker-compose.yml
+  url: process.env.REDIS_URL || 'redis://redis:6379', // Use the service name defined in docker-compose.yml
   socket: {
     reconnectStrategy: (retries) => {
       const maxRetryAttempts = parseInt(process.env.REDIS_RETRY_ATTEMPTS) || 10;
@@ -61,7 +67,7 @@ const redisClient = createClient({
 
 console.log('Connecting to Redis at:', process.env.REDIS_URL || 'redis://redis:6379');
 
-console.log('Redis URL:', process.env.REDIS_URL || 'redis://task_manager_redis:6379');
+console.log('Redis URL:', process.env.REDIS_URL || 'redis://redis:6379');
 
 let isRedisAvailable = false;
 
