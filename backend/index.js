@@ -7,9 +7,10 @@ const app = express();
 const port = 3000;
 
 app.use(cors({
-  origin: '*',
+  origin: ['http://localhost:3000', 'https://extraordinary-vacherin-e21269.netlify.app', 'https://nimble-biscotti-875944.netlify.app'],
   methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
 // Redis setup
