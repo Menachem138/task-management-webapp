@@ -15,7 +15,13 @@ const handleError = (res, error, message) => {
 app.use(express.json());
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:34793', 'https://hilarious-smakager-cd1e44.netlify.app', 'https://task-manager-app-fwetzuxo.devinapps.com', 'https://magnificent-chebakia-be06b9.netlify.app'];
+    const allowedOrigins = [
+      'https://task-manager-backend-url.com',
+      'https://hilarious-smakager-cd1e44.netlify.app',
+      'https://task-manager-app-fwetzuxo.devinapps.com',
+      'https://magnificent-chebakia-be06b9.netlify.app',
+      'https://fascinating-dragon-119dac.netlify.app'
+    ];
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -23,7 +29,7 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 204
@@ -39,7 +45,7 @@ let db;
 
 // Redis client setup
 const redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://redis:6379',
+  url: process.env.REDIS_URL || 'redis://task_manager_redis:6379', // Use the service name defined in docker-compose.yml
   socket: {
     reconnectStrategy: (retries) => {
       const maxRetryAttempts = parseInt(process.env.REDIS_RETRY_ATTEMPTS) || 10;
@@ -143,7 +149,7 @@ async function initializeRedis() {
 
   if (!redisClient) {
     redisClient = createClient({
-      url: process.env.REDIS_URL || 'redis://task_manager_redis:6379',
+      url: process.env.REDIS_URL || 'redis://redis:6379',
       socket: {
         reconnectStrategy: (attempts) => {
           if (attempts > retries) {
@@ -326,6 +332,68 @@ app.delete('/tasks/:id', async (req, res) => {
       }
       res.status(200).json({ message: 'Task deleted successfully', deletedTask: task });
     });
+  });
+});
+
+// PUT /tasks/:id/status: Update task status
+app.put('/tasks/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!['In Progress', 'Completed', 'Urgent'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status. Must be "In Progress", "Completed", or "Urgent".' });
+  }
+
+  db.run('UPDATE tasks SET status = ? WHERE id = ?', [status, id], async function(err) {
+    if (err) {
+      console.error('Database error during status update:', err);
+      return res.status(500).json({ error: 'Failed to update task status' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    if (global.redisAvailable) {
+      try {
+        await redisClient.del(`task:${id}`);
+        await redisClient.del('all_tasks');
+      } catch (redisErr) {
+        console.error('Redis error:', redisErr);
+      }
+    }
+    res.status(200).json({ message: 'Task status updated successfully', id, newStatus: status });
+  });
+});
+
+// PUT /tasks/:id/deadline: Update task deadline
+app.put('/tasks/:id/deadline', async (req, res) => {
+  const { id } = req.params;
+  const { deadline } = req.body;
+
+  let parsedDeadline = null;
+  if (deadline) {
+    parsedDeadline = new Date(deadline);
+    if (isNaN(parsedDeadline.getTime())) {
+      return res.status(400).json({ error: 'Invalid deadline format. Please use ISO 8601 format (e.g., "2023-12-31T23:59:59Z")' });
+    }
+  }
+
+  db.run('UPDATE tasks SET deadline = ? WHERE id = ?', [parsedDeadline ? parsedDeadline.toISOString() : null, id], async function(err) {
+    if (err) {
+      console.error('Database error during deadline update:', err);
+      return res.status(500).json({ error: 'Failed to update task deadline' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    if (global.redisAvailable) {
+      try {
+        await redisClient.del(`task:${id}`);
+        await redisClient.del('all_tasks');
+      } catch (redisErr) {
+        console.error('Redis error:', redisErr);
+      }
+    }
+    res.status(200).json({ message: 'Task deadline updated successfully', id, newDeadline: parsedDeadline ? parsedDeadline.toISOString() : null });
   });
 });
 
