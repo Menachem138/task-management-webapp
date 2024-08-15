@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ChakraProvider, Box, VStack, HStack, Input, Button, Text, List, ListItem, Heading, useToast, Container } from '@chakra-ui/react';
 
-const API_BASE_URL = 'https://your-deployed-backend-url.com'; // Replace with actual deployed backend URL
+const API_BASE_URL = 'https://task-management-backend-1234.herokuapp.com'; // Updated deployed backend URL
 
 function App() {
   const [tasks, setTasks] = useState({});
@@ -15,7 +15,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/tasks`);
+      const response = await axios.get(`${API_BASE_URL}/tasks`, { withCredentials: true });
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);

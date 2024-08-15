@@ -6,7 +6,12 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3001', 'https://extraordinary-vacherin-e21269.netlify.app'],
+  methods: ['GET', 'POST', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 // Redis setup
 const redisClient = redis.createClient();
