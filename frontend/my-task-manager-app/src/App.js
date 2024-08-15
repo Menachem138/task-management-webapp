@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ChakraProvider, Box, VStack, HStack, Input, Button, Text, List, ListItem, Heading, useToast, Container } from '@chakra-ui/react';
 
-const API_BASE_URL = 'https://task-management-backend-1234.herokuapp.com'; // Actual deployed backend URL
+const API_BASE_URL = 'https://task-management-backend-1234.herokuapp.com'; // Updated deployed backend URL
 
 function App() {
   const [tasks, setTasks] = useState({});
@@ -15,7 +15,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/tasks`);
+      const response = await axios.get(`${API_BASE_URL}/tasks`, { withCredentials: true });
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -31,7 +31,7 @@ function App() {
   const addTask = async () => {
     if (!newTask.trim()) return;
     try {
-      const response = await axios.post(`${API_BASE_URL}/tasks`, { description: newTask });
+      const response = await axios.post(`${API_BASE_URL}/tasks`, { description: newTask }, { withCredentials: true });
       setTasks({ ...tasks, [response.data.id]: response.data.description });
       setNewTask('');
       toast({
@@ -53,7 +53,7 @@ function App() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`${API_BASE_URL}/tasks/${id}`);
+      await axios.delete(`${API_BASE_URL}/tasks/${id}`, { withCredentials: true });
       const updatedTasks = { ...tasks };
       delete updatedTasks[id];
       setTasks(updatedTasks);

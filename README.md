@@ -1,6 +1,6 @@
 # Task Management Web Application
 
-This is a simple web application that simulates a task management system. Users can create, view, and delete tasks. The application consists of a Node.js backend, and a React.js frontend, with a Redis cache implemented for efficiency.
+This is a simple web application that simulates a task management system. Users can create, view, and delete tasks. The application consists of a Node.js backend and a React.js frontend, with a Redis cache implemented for efficiency.
 
 ## Backend
 
@@ -10,15 +10,17 @@ This is a simple web application that simulates a task management system. Users 
 - `DELETE /tasks/:id`: Delete a task by ID
 
 ### Setup
-1. Navigate to the 'backend' directory.
-2. Build the Docker image:
-   ```bash
-   docker build -t task-backend .
-   ```
-3. Run the Docker container:
-   ```bash
-   docker run -p 3000:3000 task-backend
-   ```
+1. The backend is deployed on Heroku and can be accessed via: https://task-management-backend-1234.herokuapp.com
+2. To run locally:
+   - Navigate to the 'backend' directory.
+   - Build the Docker image:
+     ```bash
+     docker build -t task-backend .
+     ```
+   - Run the Docker container:
+     ```bash
+     docker run -p 3000:3000 task-backend
+     ```
 
 ## Frontend
 
@@ -27,13 +29,13 @@ This is a simple web application that simulates a task management system. Users 
 2. To build locally:
    - Navigate to the 'frontend/my-task-manager-app' directory.
    - Build the Docker image:
-   ```bash
-   docker build -t task-frontend .
-   ```
+     ```bash
+     docker build -t task-frontend .
+     ```
    - Run the Docker container:
-   ```bash
-   docker run -p 80:80 task-frontend
-   ```
+     ```bash
+     docker run -p 80:80 task-frontend
+     ```
 
 ## Considerations
 - **Redis Cache**: Integrated to minimize database load by caching task lists.
@@ -42,6 +44,6 @@ This is a simple web application that simulates a task management system. Users 
 - **Docker**: Both backend and frontend are containerized for consistent environments across development and production.
 
 ### Additional Information
-- Ensure Docker is installed and running on your machine.
-- Redeploy the frontend using the token provided in deployment: `7c98e5ec1ee841d0805d3dc29d5d7596`
+- Ensure Docker is installed and running on your machine for local development.
+- The frontend automatically connects to the deployed backend. If you're running the backend locally, update the `API_BASE_URL` in `frontend/my-task-manager-app/src/App.js`.
 - For issues or questions about this application, refer to deployment documentation at https://cra.link/deployment.
