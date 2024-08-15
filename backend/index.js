@@ -19,57 +19,73 @@ db.run(`CREATE TABLE IF NOT EXISTS tasks (
 
 app.use(express.json());
 
+// Initialize Redis client
+(async () => {
+  await redisClient.connect();
+})();
+
 // POST /tasks: Create a new task
-app.post('/tasks', (req, res) => {
+app.post('/tasks', async (req, res) => {
   const { description } = req.body;
-  db.run('INSERT INTO tasks (description) VALUES (?)', [description], function(err) {
-    if (err) {
-      return res.status(500).json({ error: 'Error creating task' });
-    }
-    const id = this.lastID;
-    // Update Redis cache
-    redisClient.hset('tasks', id, description);
-    res.status(201).json({ id, description });
-  });
+  try {
+    db.run('INSERT INTO tasks (description) VALUES (?)', [description], async function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Error creating task' });
+      }
+      const id = this.lastID;
+      // Update Redis cache
+      await redisClient.hSet('tasks', id.toString(), description);
+      res.status(201).json({ id, description });
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating task' });
+  }
 });
 
 // GET /tasks: Retrieve a list of all tasks
-app.get('/tasks', (req, res) => {
-  redisClient.hgetall('tasks', (err, cachedTasks) => {
-    if (err || !cachedTasks) {
+app.get('/tasks', async (req, res) => {
+  try {
+    const cachedTasks = await redisClient.hGetAll('tasks');
+    if (Object.keys(cachedTasks).length === 0) {
       // If cache miss, fetch from SQLite
-      db.all('SELECT * FROM tasks', (err, rows) => {
+      db.all('SELECT * FROM tasks', async (err, rows) => {
         if (err) {
           return res.status(500).json({ error: 'Error retrieving tasks' });
         }
         // Update Redis cache
         const tasks = {};
-        rows.forEach(row => {
+        for (const row of rows) {
           tasks[row.id] = row.description;
-          redisClient.hset('tasks', row.id, row.description);
-        });
+          await redisClient.hSet('tasks', row.id.toString(), row.description);
+        }
         res.json(tasks);
       });
     } else {
       res.json(cachedTasks);
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error: 'Error retrieving tasks' });
+  }
 });
 
 // DELETE /tasks/:id: Delete a task by ID
-app.delete('/tasks/:id', (req, res) => {
+app.delete('/tasks/:id', async (req, res) => {
   const { id } = req.params;
-  db.run('DELETE FROM tasks WHERE id = ?', id, function(err) {
-    if (err) {
-      return res.status(500).json({ error: 'Error deleting task' });
-    }
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-    // Remove from Redis cache
-    redisClient.hdel('tasks', id);
-    res.status(204).send();
-  });
+  try {
+    db.run('DELETE FROM tasks WHERE id = ?', id, async function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Error deleting task' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Task not found' });
+      }
+      // Remove from Redis cache
+      await redisClient.hDel('tasks', id);
+      res.status(204).send();
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting task' });
+  }
 });
 
 app.listen(port, () => {
@@ -77,8 +93,8 @@ app.listen(port, () => {
 });
 
 // Graceful shutdown
-process.on('SIGINT', () => {
-  redisClient.quit();
+process.on('SIGINT', async () => {
+  await redisClient.quit();
   db.close();
   process.exit();
 });
