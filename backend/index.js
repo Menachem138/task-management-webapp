@@ -14,27 +14,7 @@ const handleError = (res, error, message) => {
 // Middleware
 app.use(express.json());
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://task-manager-backend-url.com',
-      'https://hilarious-smakager-cd1e44.netlify.app',
-      'https://task-manager-app-fwetzuxo.devinapps.com',
-      'https://magnificent-chebakia-be06b9.netlify.app',
-      'https://fascinating-dragon-119dac.netlify.app',
-      'http://localhost:3000',
-      'http://localhost:3002',
-      'http://clinquant-taiyaki-334b29.netlify.app',
-      'https://clinquant-taiyaki-334b29.netlify.app',
-      'http://task-manager-backend-url.com',
-      'https://backend-deployed-url.com'
-    ];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-      callback(null, true);
-    } else {
-      console.error(`CORS error: Origin ${origin} not allowed`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ['https://chipper-rugelach-cb43d5.netlify.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -51,7 +31,7 @@ let db;
 
 // Redis client setup
 const redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://redis:6379', // Use the service name defined in docker-compose.yml
+  url: process.env.REDIS_URL || 'redis://redis:6379',
   socket: {
     reconnectStrategy: (retries) => {
       const maxRetryAttempts = parseInt(process.env.REDIS_RETRY_ATTEMPTS) || 10;
@@ -63,6 +43,32 @@ const redisClient = createClient({
       return Math.min(retries * retryDelay, 30000);
     },
   },
+});
+
+redisClient.on('error', (err) => {
+  console.error('Redis Client Error:', err);
+  global.redisAvailable = false;
+});
+
+redisClient.on('connect', () => {
+  console.log('Redis Client Connected');
+  global.redisAvailable = true;
+});
+
+redisClient.on('ready', async () => {
+  try {
+    await redisClient.ping();
+    console.log('Redis PING successful');
+    global.redisAvailable = true;
+  } catch (error) {
+    console.error('Redis PING failed:', error);
+    global.redisAvailable = false;
+  }
+});
+
+redisClient.on('end', () => {
+  console.log('Redis connection ended');
+  global.redisAvailable = false;
 });
 
 console.log('Connecting to Redis at:', process.env.REDIS_URL || 'redis://redis:6379');
@@ -97,14 +103,24 @@ redisClient.on('reconnecting', () => {
 });
 
 // Connect to Redis
-const connectToRedis = async () => {
-  try {
-    if (!redisClient.isOpen) {
-      await redisClient.connect();
+const connectToRedis = async (retries = 5, delay = 5000) => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      if (!redisClient.isOpen) {
+        await redisClient.connect();
+      }
+      console.log('Successfully connected to Redis');
+      isRedisAvailable = true;
+      return;
+    } catch (error) {
+      console.error(`Failed to connect to Redis (attempt ${attempt}/${retries}):`, error);
+      if (attempt === retries) {
+        console.error('Max retry attempts reached. Continuing without Redis.');
+        isRedisAvailable = false;
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, delay * attempt));
     }
-  } catch (error) {
-    console.error('Failed to connect to Redis:', error);
-    isRedisAvailable = false;
   }
 };
 
@@ -431,6 +447,27 @@ const initializeAndStartServer = async () => {
       console.warn('Failed to initialize Redis:', redisError.message);
       console.warn('Continuing without Redis. Some features may be affected.');
       global.redisAvailable = false;
+    }
+
+    // Retry Redis connection if it failed initially
+    if (!global.redisAvailable) {
+      console.log('Retrying Redis connection...');
+      const maxRetries = 5;
+      let retries = 0;
+      while (retries < maxRetries && !global.redisAvailable) {
+        try {
+          await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+          await initializeRedis();
+          global.redisAvailable = true;
+          console.log('Redis reconnection successful');
+        } catch (error) {
+          console.error(`Redis reconnection attempt ${retries + 1} failed:`, error.message);
+          retries++;
+        }
+      }
+      if (!global.redisAvailable) {
+        console.warn(`Failed to reconnect to Redis after ${maxRetries} attempts. Continuing without Redis.`);
+      }
     }
 
     await new Promise((resolve, reject) => {
