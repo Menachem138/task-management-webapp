@@ -1,4 +1,15 @@
 [build]
-  command = "npm run build"
-  publish = "frontend/build"
+  command = "npm ci && npm run build"
+  publish = "build"
   base = "frontend"
+
+[build.environment]
+  NODE_VERSION = "14"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.processing]
+  skip_processing = false
