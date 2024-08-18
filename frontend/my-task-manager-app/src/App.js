@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ChakraProvider, Box, VStack, HStack, Input, Button, Text, List, ListItem, Heading, useToast, Container } from '@chakra-ui/react';
 
-const API_BASE_URL = 'https://your-deployed-backend-url.com'; // Replace with actual deployed backend URL
+const API_BASE_URL = 'https://task-management-app-3dm2knbv.devinapps.com/api'; // Updated to actual deployed backend URL
 
 function App() {
-  const [tasks, setTasks] = useState({});
+  const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const toast = useToast();
 
@@ -31,9 +31,9 @@ function App() {
   const addTask = async () => {
     if (!newTask.trim()) return;
     try {
-      const response = await axios.post(`${API_BASE_URL}/tasks`, { description: newTask });
-      setTasks({ ...tasks, [response.data.id]: response.data.description });
+      await axios.post(`${API_BASE_URL}/tasks`, { description: newTask });
       setNewTask('');
+      fetchTasks(); // Fetch tasks after adding to refresh the list
       toast({
         title: 'Task added',
         status: 'success',
@@ -54,9 +54,7 @@ function App() {
   const deleteTask = async (id) => {
     try {
       await axios.delete(`${API_BASE_URL}/tasks/${id}`);
-      const updatedTasks = { ...tasks };
-      delete updatedTasks[id];
-      setTasks(updatedTasks);
+      fetchTasks(); // Fetch tasks after deleting to refresh the list
       toast({
         title: 'Task deleted',
         status: 'info',
@@ -91,11 +89,11 @@ function App() {
             </HStack>
           </Box>
           <List spacing={3} width="100%">
-            {Object.entries(tasks).map(([id, description]) => (
-              <ListItem key={id} p={4} bg="gray.50" borderRadius="md" boxShadow="sm">
+            {tasks.map((task) => (
+              <ListItem key={task._id} p={4} bg="gray.50" borderRadius="md" boxShadow="sm">
                 <HStack justifyContent="space-between">
-                  <Text>{description}</Text>
-                  <Button colorScheme="red" size="sm" onClick={() => deleteTask(id)}>Delete</Button>
+                  <Text>{task.description}</Text>
+                  <Button colorScheme="red" size="sm" onClick={() => deleteTask(task._id)}>Delete</Button>
                 </HStack>
               </ListItem>
             ))}
