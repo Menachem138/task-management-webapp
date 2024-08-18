@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { ChakraProvider, Box, VStack, HStack, Input, Button, Text, List, ListItem, Heading, useToast, Container, Select, FormControl, FormLabel } from '@chakra-ui/react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 const API_BASE_URL = 'https://task-management-app-3dm2knbv.devinapps.com/api';
 
@@ -10,6 +12,8 @@ function App() {
   const [deadline, setDeadline] = useState('');
   const [urgency, setUrgency] = useState('low');
   const [status, setStatus] = useState('in-progress');
+  const [showConfetti, setShowConfetti] = useState(false);
+  const { width, height } = useWindowSize();
   const toast = useToast();
 
   const fetchTasks = useCallback(async () => {
@@ -86,13 +90,29 @@ function App() {
   const updateTaskStatus = async (id, newStatus) => {
     try {
       await axios.put(`${API_BASE_URL}/tasks/${id}`, { status: newStatus });
-      fetchTasks();
-      toast({
-        title: 'Task status updated',
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
+      if (newStatus === 'completed') {
+        setShowConfetti(true);
+        console.log('showConfetti set to true'); // Added console log
+        setTimeout(() => {
+          setShowConfetti(false);
+          console.log('showConfetti set to false'); // Added console log
+        }, 5000); // Hide confetti after 5 seconds
+        toast({
+          title: 'Congratulations!',
+          description: 'You have completed a task!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Task status updated',
+          status: 'info',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+      fetchTasks(); // Moved after the if-else block
     } catch (error) {
       console.error('Error updating task status:', error);
       toast({
@@ -104,9 +124,20 @@ function App() {
     }
   };
 
+
+
   return (
     <ChakraProvider>
       <Container maxW="container.md" py={8}>
+        {showConfetti && (
+          <Confetti
+            width={width}
+            height={height}
+            recycle={false}
+            numberOfPieces={200}
+            gravity={0.1}
+          />
+        )}
         <VStack spacing={8}>
           <Heading as="h1" size="xl">Task Manager</Heading>
           <Box width="100%">
