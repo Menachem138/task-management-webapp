@@ -75,12 +75,9 @@ function App() {
   const questionsPerPage = 50
 
   useEffect(() => {
-    console.log('Loading questions...')
     fetch(`${import.meta.env.VITE_API_URL}/questions/mapping.json`)
       .then(response => response.json())
       .then(data => {
-        console.log('Questions loaded:', data.questions.length)
-        console.log('Sample question:', data.questions[0])
         setQuestions(data.questions)
         setFilteredQuestions(data.questions)
         setTotalQuestions(data.questions.length)
@@ -94,7 +91,6 @@ function App() {
     setSearchTerm(term)
     // Split search term into keywords, normalize, and filter out empty strings
     const keywords = term.toLowerCase().split(/\s+/).filter(k => k.length > 0)
-    console.log('Search keywords:', keywords)
     
     // If no keywords, show all questions
     if (keywords.length === 0) {
@@ -107,42 +103,42 @@ function App() {
     const searchResults: SearchResult[] = questions.map(q => {
       // Normalize all text fields consistently
       const searchText = normalizeString(`${q.question} ${q.author} ${q.date}`)
-      console.log(`\nProcessing question: "${q.question.substring(0, 100)}..."`)
-      console.log(`Normalized text: "${searchText}"`)
       
       let score = 0
       const matchedKeywords = new Set<string>()
-      let allKeywordsMatch = true
       
       // Check each keyword and its variations
       for (const keyword of keywords) {
         const variations = getWordVariations(keyword)
-        console.log(`\nChecking keyword "${keyword}" with variations:`, variations)
         
         // Try to match any variation with word boundaries
         let keywordMatched = false
         for (const variation of variations) {
           const normalizedVariation = normalizeString(variation)
-          const pattern = `\\b${escapeRegExp(normalizedVariation)}\\b`
-          try {
-            const regex = new RegExp(pattern, 'i')
-            const matches = regex.test(searchText)
-            console.log(`Testing "${variation}" (${normalizedVariation}) with pattern "${pattern}" - Match: ${matches}`)
-            if (matches) {
-              keywordMatched = true
-              matchedKeywords.add(variation)
-              score++
-              break
+          // Allow partial word matches with minimum 2 characters
+          if (normalizedVariation.length >= 2) {
+            try {
+              // Use looser matching for better results
+              const pattern = normalizedVariation.length >= 4 
+                ? `\\b${escapeRegExp(normalizedVariation)}` // Word boundary only at start for longer words
+                : escapeRegExp(normalizedVariation) // No word boundary for short words
+              const regex = new RegExp(pattern, 'i')
+              const matches = regex.test(searchText)
+              if (matches) {
+                keywordMatched = true
+                matchedKeywords.add(variation)
+                score++
+                break
+              }
+            } catch (e) {
+              console.error(`Invalid regex pattern for "${variation}":`, e)
             }
-          } catch (e) {
-            console.error(`Invalid regex pattern: ${pattern}`, e)
           }
         }
         
-        if (!keywordMatched) {
-          console.log(`No match found for keyword "${keyword}" and its variations`)
-          allKeywordsMatch = false
-          break // Exit early if any keyword doesn't match
+        // Don't break on unmatched keywords - allow partial matches
+        if (keywordMatched) {
+          score += 0.5 // Bonus for matching more keywords
         }
       }
       
@@ -159,12 +155,6 @@ function App() {
         highlightedText: score > 0 ? highlightMatches(q.question, Array.from(matchedKeywords)) : q.question
       }
     })
-    
-    // Debug search results
-    console.log('Search results before filtering:', searchResults.map(r => ({
-      score: r.score,
-      text: r.question.question.substring(0, 100)
-    })))
     
     // Filter and sort results by rank and score
     const filteredResults = searchResults
@@ -183,16 +173,30 @@ function App() {
       ...r.question,
       question: r.highlightedText
     }))
-    
-    console.log(`Found ${processedQuestions.length} matches out of ${questions.length} total questions`)
     setFilteredQuestions(processedQuestions)
     setPage(1)
   }
 
   const playAudio = (audioFile: string) => {
-    const audio = new Audio(`${import.meta.env.VITE_API_URL}/audio/${audioFile}`)
+    const audioUrl = `${import.meta.env.VITE_API_URL}/audio/${audioFile}`
+    console.log('Tentative de lecture audio depuis:', audioUrl)
+    
+    const audio = new Audio(audioUrl)
+    audio.addEventListener('error', (e) => {
+      console.error('Erreur de chargement audio:', {
+        error: e.error,
+        currentSrc: audio.currentSrc,
+        readyState: audio.readyState,
+        networkState: audio.networkState
+      })
+    })
+    
     audio.play().catch(error => {
-      console.error('Erreur lors de la lecture audio:', error)
+      console.error('Erreur lors de la lecture audio:', {
+        name: error.name,
+        message: error.message,
+        url: audioUrl
+      })
       alert('Erreur lors de la lecture audio. Veuillez réessayer.')
     })
   }
@@ -255,10 +259,7 @@ function App() {
           type="text"
           placeholder="Rechercher une question..."
           value={searchTerm}
-          onChange={(e) => {
-            console.log('Search input changed:', e.target.value)
-            handleSearch(e.target.value)
-          }}
+          onChange={(e) => handleSearch(e.target.value)}
           className="flex-1"
         />
         <Button variant="outline" size="icon">
