@@ -177,21 +177,41 @@ function App() {
     setPage(1)
   }
 
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+    }
+  }
+
   const playAudio = (audioFile: string) => {
+    // Pause any currently playing audio
+    pauseAudio()
+    
     const audioUrl = `${import.meta.env.VITE_API_URL}/audio/${audioFile}`
     console.log('Tentative de lecture audio depuis:', audioUrl)
     
-    const audio = new Audio(audioUrl)
-    audio.addEventListener('error', (e) => {
+    audioRef.current = new Audio(audioUrl)
+    
+    audioRef.current.addEventListener('loadstart', () => {
+      console.log('Chargement audio démarré')
+    })
+    
+    audioRef.current.addEventListener('canplay', () => {
+      console.log('Audio prêt à être lu')
+    })
+    
+    audioRef.current.addEventListener('error', (e) => {
       console.error('Erreur de chargement audio:', {
         error: e.error,
-        currentSrc: audio.currentSrc,
-        readyState: audio.readyState,
-        networkState: audio.networkState
+        currentSrc: audioRef.current?.currentSrc,
+        readyState: audioRef.current?.readyState,
+        networkState: audioRef.current?.networkState
       })
     })
     
-    audio.play().catch(error => {
+    audioRef.current.play().catch(error => {
       console.error('Erreur lors de la lecture audio:', {
         name: error.name,
         message: error.message,
