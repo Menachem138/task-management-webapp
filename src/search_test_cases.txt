@@ -1,0 +1,30 @@
+Test Cases pour la Recherche
+
+1. Mots avec accents
+- "prière" devrait trouver "priere" et "prières"
+- "chabbât" devrait trouver "chabbat", "chabat", "shabbat"
+- "bénédiction" devrait trouver "benediction", "berakha"
+
+2. Mots courts
+- "rav" devrait trouver "rav", "rabbi", "rabbin"
+- "din" devrait trouver "beth din", "din", "dinim"
+
+3. Caractères spéciaux
+- "beth-din" devrait trouver "beth din"
+- "d'un" devrait trouver "d'un", "dun"
+- "l'eau" devrait trouver "l'eau", "leau"
+
+4. Recherche multi-mots
+- "viande lait" devrait trouver des questions contenant soit "viande" soit "lait"
+- "chabbat allumer" devrait trouver des questions sur l'allumage pendant chabbat
+- "priere minyan" devrait trouver des questions liées à la prière en minyan
+
+5. Variations orthographiques
+- "cachere" devrait trouver "cacher", "casher", "kasher"
+- "mezouza" devrait trouver "mezuzah", "mezousa"
+
+Instructions de test:
+1. Lancer chaque recherche
+2. Vérifier que les résultats incluent les variations attendues
+3. Pendant la recherche, tester la lecture audio pour vérifier qu'il n'y a pas d'interruption
+4. Noter tout comportement inattendu ou problème de performance

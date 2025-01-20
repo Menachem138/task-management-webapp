@@ -1,0 +1,45 @@
+Analyse du Système de Recherche
+
+1. Implémentation Actuelle
+- Normalisation des accents via normalizeString()
+- Correspondance partielle des mots (minimum 3 caractères)
+- Logique OR pour les mots-clés multiples
+- Recherche dans question, auteur, et date
+
+2. Points Potentiels d'Amélioration
+a) Normalisation des Accents
+   - Vérifier si la normalisation fonctionne correctement pour tous les caractères français
+   - Potentiellement ajouter des cas spéciaux pour certains caractères
+
+b) Correspondance Partielle
+   - Le minimum de 3 caractères pourrait être trop restrictif
+   - Pas de priorité donnée aux correspondances exactes
+   - Manque de gestion des mots composés
+
+c) Logique de Recherche
+   - La logique OR pourrait être trop permissive
+   - Pas de score de pertinence pour trier les résultats
+   - Pas de gestion des fautes de frappe
+
+3. Tests à Effectuer
+- Recherche avec accents vs sans accents
+- Mots partiels vs mots complets
+- Mots composés
+- Variations orthographiques communes
+
+4. Suggestions d'Amélioration
+a) Court Terme
+   - Réduire le minimum de caractères à 2
+   - Ajouter une priorité aux correspondances exactes
+   - Améliorer la gestion des accents
+
+b) Long Terme
+   - Implémenter un système de score de pertinence
+   - Ajouter une correction orthographique
+   - Permettre la recherche par tags/catégories
+
+5. Exemple de Cas Problématiques
+- "prière" vs "priere"
+- "chabbat" vs "chabat" vs "shabbat"
+- Mots courts (< 3 caractères)
+- Mots composés ("beth din" vs "bethdin")
