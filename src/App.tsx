@@ -60,8 +60,8 @@ function App() {
     }
 
     const filtered = questions.filter(q => {
-      const searchText = normalizeString(`${q.question} ${q.author} ${q.date}`)
-      return keywords.some(k => searchText.includes(normalizeString(k)))
+      const text = normalizeString(`${q.question} ${q.author} ${q.date}`)
+      return keywords.some(k => text.includes(normalizeString(k)))
     })
     
     setFilteredQuestions(filtered)
@@ -108,7 +108,7 @@ function App() {
         throw new Error(error.detail || "Erreur lors du téléversement")
       }
 
-      const data = await response.json()
+      await response.json()
       setUploadSuccess("Import réussi ! Actualisation des questions...")
       fileInput.value = ''
       
@@ -194,7 +194,7 @@ function App() {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <p className="whitespace-pre-wrap">{q.question}</p>
+                  <p className="whitespace-pre-wrap text-base">{q.question}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {q.audio_files.map((audio, index) => (
