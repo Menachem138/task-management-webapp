@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "telegram-bot"
+version = "0.1.0"
+description = "Telegram Bot for Questions au Rav Abichid"
+authors = ["Devin AI <devin@ai.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-telegram-bot = "^20.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

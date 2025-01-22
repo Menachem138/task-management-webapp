@@ -1,0 +1,30 @@
+2025-01-22 00:03:46,346 - __main__ - INFO - Testing direct audio playback...
+2025-01-22 00:03:46,346 - __main__ - INFO - Testing audio file: /home/ubuntu/questions_responses/audio/2017-03-01-AUDIO-00000022.opus
+2025-01-22 00:03:46,346 - __main__ - INFO - File size: 109431 bytes
+2025-01-22 00:03:47,395 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/sendAudio "HTTP/1.1 200 OK"
+2025-01-22 00:03:47,396 - __main__ - INFO - Audio sent successfully
+2025-01-22 00:03:47,396 - __main__ - INFO - Testing audio command...
+2025-01-22 00:03:47,650 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/sendMessage "HTTP/1.1 200 OK"
+2025-01-22 00:03:47,651 - __main__ - INFO - Command sent: /audio 2017-03-01-AUDIO-00000022
+2025-01-22 00:03:47,651 - __main__ - INFO - Waiting for response...
+2025-01-22 08:36:53,054 - __main__ - INFO - Testing direct audio playback...
+2025-01-22 08:36:53,054 - __main__ - INFO - Testing audio file: /home/ubuntu/questions_responses/audio/2017-03-09-AUDIO-00000177.opus
+2025-01-22 08:36:53,054 - __main__ - INFO - File size: 104163 bytes
+2025-01-22 08:36:54,139 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/sendAudio "HTTP/1.1 200 OK"
+2025-01-22 08:36:54,140 - __main__ - INFO - Audio sent successfully
+2025-01-22 08:36:54,140 - __main__ - INFO - Testing audio command...
+2025-01-22 08:36:54,350 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/sendMessage "HTTP/1.1 200 OK"
+2025-01-22 08:36:54,350 - __main__ - INFO - Command sent: /audio 202017-03-09-091
+2025-01-22 08:36:54,350 - __main__ - INFO - Waiting for response...
+2025-01-22 08:36:55,807 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:36:59,967 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:01,637 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 08:37:01,638 - __main__ - ERROR - Error getting updates: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 08:37:05,796 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:07,955 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:12,113 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:16,279 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:18,438 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:22,617 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:24,775 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:37:25,777 - __main__ - ERROR - No response received within timeout

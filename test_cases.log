@@ -1,0 +1,41 @@
+2025-01-22 07:04:03,050 - INFO - Using bot token from: environment
+2025-01-22 07:04:03,050 - INFO - Starting test suite with configuration:
+2025-01-22 07:04:03,051 - INFO - Test chat ID: 39557300
+2025-01-22 07:04:03,051 - INFO - Bot token: 7099400053...4ufsk
+2025-01-22 07:04:03,616 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 07:04:03,617 - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 07:04:04,129 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 07:04:04,129 - INFO - Connected to bot: @Halakhotbot
+2025-01-22 07:04:04,298 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 07:04:04,299 - INFO - Successfully deleted webhook
+2025-01-22 07:04:04,450 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 07:04:05,911 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 07:04:15,961 - INFO - Killing any existing bot processes...
+2025-01-22 07:04:30,165 - INFO - All bot processes successfully terminated
+2025-01-22 07:04:30,165 - INFO - Bot process cleanup completed
+2025-01-22 07:04:30,165 - INFO - Starting bot process...
+2025-01-22 07:04:32,207 - INFO - Started bot process with PID: 17528
+2025-01-22 07:04:34,214 - ERROR - Bot stderr: 2025-01-22 07:04:32,422 - __main__ - INFO - Using bot token from: environment
+2025-01-22 07:04:34,214 - ERROR - Bot stderr: 2025-01-22 07:04:32,983 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 07:04:34,214 - ERROR - Bot stderr: 2025-01-22 07:04:33,132 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 07:04:34,214 - INFO - Bot startup detected in stderr
+2025-01-22 07:04:34,714 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 07:04:34,714 - INFO - Bot is responding: @Halakhotbot
+2025-01-22 07:04:34,714 - INFO - Bot startup completed successfully
+2025-01-22 07:04:35,228 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 07:04:35,229 - INFO - Bot is responding: @Halakhotbot
+2025-01-22 07:04:35,229 - INFO - Clearing pending updates...
+2025-01-22 07:04:35,756 - ERROR - Bot stderr: 2025-01-22 07:04:35,756 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 07:04:35,757 - ERROR - Bot stderr: 2025-01-22 07:04:35,757 - __main__ - ERROR - Update None caused error Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 07:04:39,915 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 07:04:39,916 - WARNING - Error clearing updates (attempt 1/3): Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 07:04:45,428 - ERROR - Bot stderr: 2025-01-22 07:04:45,428 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 07:04:45,429 - ERROR - Bot stderr: 2025-01-22 07:04:45,429 - __main__ - ERROR - Update None caused error Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 07:04:50,089 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 07:04:50,090 - WARNING - Error clearing updates (attempt 2/3): Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 07:04:55,640 - ERROR - Bot stderr: 2025-01-22 07:04:55,640 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 07:04:55,641 - ERROR - Bot stderr: 2025-01-22 07:04:55,641 - __main__ - ERROR - Update None caused error Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 07:05:01,058 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 409 Conflict"
+2025-01-22 07:05:01,058 - WARNING - Error clearing updates (attempt 3/3): Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-22 07:05:08,069 - ERROR - Bot stderr: 2025-01-22 07:05:08,068 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 07:05:18,234 - ERROR - Bot stderr: 2025-01-22 07:05:18,234 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  telegram_bot:
+    build: .
+    volumes:
+      - ../questions_responses:/app/questions_responses:ro
+      - ./logs:/app/logs
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/telegram_bot.log"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

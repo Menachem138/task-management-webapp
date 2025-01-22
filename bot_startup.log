@@ -1,0 +1,45 @@
+2025-01-22 08:03:21,927 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:03:22,030 - __main__ - INFO - Starting bot...
+2025-01-22 08:03:22,502 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:03:22,503 - telegram.ext.Application - INFO - Application started
+2025-01-22 08:03:22,654 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:03:22,654 - __main__ - INFO - Bot started successfully. Username: @Halakhotbot
+2025-01-22 08:03:22,655 - __main__ - ERROR - Error starting bot: This event loop is already running
+2025-01-22 08:03:22,656 - __main__ - ERROR - Bot crashed: This event loop is already running
+Traceback (most recent call last):
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/site-packages/telegram/ext/_application.py", line 1069, in __run
+    loop.run_until_complete(self.initialize())
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/base_events.py", line 663, in run_until_complete
+    self._check_running()
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/base_events.py", line 622, in _check_running
+    raise RuntimeError('This event loop is already running')
+RuntimeError: This event loop is already running
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/telegram_bot/bot.py", line 391, in <module>
+    asyncio.run(main())
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/telegram_bot/bot.py", line 378, in main
+    application.run_polling(
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/site-packages/telegram/ext/_application.py", line 868, in run_polling
+    return self.__run(
+           ^^^^^^^^^^^
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/site-packages/telegram/ext/_application.py", line 1090, in __run
+    loop.run_until_complete(self.stop())
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/base_events.py", line 663, in run_until_complete
+    self._check_running()
+  File "/home/ubuntu/.pyenv/versions/3.12.7/lib/python3.12/asyncio/base_events.py", line 622, in _check_running
+    raise RuntimeError('This event loop is already running')
+RuntimeError: This event loop is already running
+sys:1: RuntimeWarning: coroutine 'Application.initialize' was never awaited
+sys:1: RuntimeWarning: coroutine 'Application.stop' was never awaited

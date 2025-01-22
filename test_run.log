@@ -1,0 +1,235 @@
+2025-01-22 08:01:42,202 - INFO - Initializing test configuration...
+2025-01-22 08:01:42,203 - INFO - Starting test suite with configuration:
+2025-01-22 08:01:42,203 - INFO - Test chat ID: 39557300
+2025-01-22 08:01:42,203 - INFO - Bot token: 7099400053...4ufsk
+2025-01-22 08:01:42,776 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:01:42,776 - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:01:43,280 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:01:43,281 - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:01:43,430 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:01:43,431 - INFO - Successfully deleted webhook
+2025-01-22 08:01:43,580 - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:01:43,581 - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:01:53,631 - INFO - Killing any existing bot processes...
+2025-01-22 08:02:07,846 - INFO - All bot processes successfully terminated
+2025-01-22 08:02:07,846 - INFO - Bot process cleanup completed
+2025-01-22 08:02:07,846 - INFO - Starting bot process...
+2025-01-22 08:02:09,893 - INFO - Started bot process with PID: 65976
+2025-01-22 08:02:11,899 - ERROR - Bot process exited with code 1
+2025-01-22 08:02:11,899 - ERROR - Bot process exited with code 1
+2025-01-22 08:02:11,899 - ERROR - Error during startup: Bot process exited with code 1
+2025-01-22 08:23:45,000 - test_cases - INFO - Initializing test configuration...
+2025-01-22 08:23:45,000 - __main__ - INFO - Starting test suite...
+2025-01-22 08:23:45,581 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:23:45,581 - test_cases - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:23:46,097 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:23:46,097 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:23:46,251 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:23:46,251 - test_cases - INFO - Successfully deleted webhook
+2025-01-22 08:23:46,404 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:23:46,405 - test_cases - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:23:56,442 - test_cases - INFO - Killing any existing bot processes...
+2025-01-22 08:24:10,653 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:24:10,653 - test_cases - INFO - Bot process cleanup completed
+2025-01-22 08:24:10,653 - test_cases - INFO - Starting bot process...
+2025-01-22 08:24:12,697 - test_cases - INFO - Started bot process with PID: 84841
+2025-01-22 08:24:14,704 - test_cases - ERROR - Bot stderr: 2025-01-22 08:24:12,907 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:24:14,704 - test_cases - ERROR - Bot stderr: 2025-01-22 08:24:13,007 - __main__ - INFO - Starting bot...
+2025-01-22 08:24:14,704 - test_cases - ERROR - Bot stderr: 2025-01-22 08:24:13,007 - __main__ - INFO - Starting bot polling...
+2025-01-22 08:24:14,704 - test_cases - ERROR - Bot stderr: 2025-01-22 08:24:13,468 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:24:14,705 - test_cases - ERROR - Bot stderr: 2025-01-22 08:24:13,619 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:24:14,705 - test_cases - INFO - Bot startup detected in stderr
+2025-01-22 08:24:15,257 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:24:15,258 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:24:15,258 - test_cases - INFO - Bot startup completed successfully
+2025-01-22 08:24:15,768 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:24:15,768 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:24:15,768 - test_cases - INFO - Letting bot process handle updates...
+2025-01-22 08:24:20,769 - test_cases - INFO - Bot cleanup completed
+2025-01-22 08:24:20,769 - test_cases - INFO - Creating new application instance...
+2025-01-22 08:24:20,825 - test_cases - ERROR - Failed to verify test chat: TEST_CHAT_ID is not set
+2025-01-22 08:24:20,825 - test_cases - ERROR - Error creating application: Test chat not accessible
+2025-01-22 08:24:20,827 - __main__ - ERROR - Some tests failed
+2025-01-22 08:25:32,526 - test_cases - INFO - Initializing test configuration...
+2025-01-22 08:25:32,526 - __main__ - INFO - Starting test suite...
+2025-01-22 08:25:33,126 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:25:33,127 - test_cases - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:25:33,640 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:25:33,641 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:25:33,795 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:25:33,796 - test_cases - INFO - Successfully deleted webhook
+2025-01-22 08:25:34,087 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:25:34,087 - test_cases - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:25:44,138 - test_cases - INFO - Killing any existing bot processes...
+2025-01-22 08:25:44,171 - test_cases - INFO - Killing bot process: 84841
+2025-01-22 08:25:58,847 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:25:58,847 - test_cases - INFO - Bot process cleanup completed
+2025-01-22 08:25:58,847 - test_cases - INFO - Starting bot process...
+2025-01-22 08:26:00,892 - test_cases - INFO - Started bot process with PID: 86693
+2025-01-22 08:26:02,898 - test_cases - ERROR - Bot stderr: 2025-01-22 08:26:01,098 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:26:02,899 - test_cases - ERROR - Bot stderr: 2025-01-22 08:26:01,194 - __main__ - INFO - Starting bot...
+2025-01-22 08:26:02,899 - test_cases - ERROR - Bot stderr: 2025-01-22 08:26:01,194 - __main__ - INFO - Starting bot polling...
+2025-01-22 08:26:02,899 - test_cases - ERROR - Bot stderr: 2025-01-22 08:26:01,659 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:26:02,899 - test_cases - ERROR - Bot stderr: 2025-01-22 08:26:01,809 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:26:02,899 - test_cases - INFO - Bot startup detected in stderr
+2025-01-22 08:26:03,417 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:26:03,418 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:26:03,418 - test_cases - INFO - Bot startup completed successfully
+2025-01-22 08:26:03,927 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:26:03,927 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:26:03,927 - test_cases - INFO - Letting bot process handle updates...
+2025-01-22 08:26:08,928 - test_cases - INFO - Bot cleanup completed
+2025-01-22 08:26:08,929 - test_cases - INFO - Creating new application instance...
+2025-01-22 08:26:08,983 - test_cases - ERROR - Failed to verify test chat: TEST_CHAT_ID is not set
+2025-01-22 08:26:08,983 - test_cases - ERROR - Error creating application: Test chat not accessible
+2025-01-22 08:26:08,985 - __main__ - ERROR - Some tests failed
+2025-01-22 08:29:34,299 - test_cases - INFO - Initializing test configuration...
+2025-01-22 08:29:34,299 - __main__ - INFO - Starting test suite...
+2025-01-22 08:29:34,865 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:29:34,866 - test_cases - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:29:35,385 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:29:35,385 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:29:35,542 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:29:35,543 - test_cases - INFO - Successfully deleted webhook
+2025-01-22 08:29:35,694 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:29:35,695 - test_cases - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:29:45,721 - test_cases - INFO - Killing any existing bot processes...
+2025-01-22 08:29:45,753 - test_cases - INFO - Killing bot process: 86693
+2025-01-22 08:30:02,967 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:30:02,967 - test_cases - INFO - Bot process cleanup completed
+2025-01-22 08:30:02,967 - test_cases - INFO - Starting bot process...
+2025-01-22 08:30:05,013 - test_cases - INFO - Started bot process with PID: 90344
+2025-01-22 08:30:07,019 - test_cases - ERROR - Bot stderr: 2025-01-22 08:30:05,217 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:30:07,019 - test_cases - ERROR - Bot stderr: 2025-01-22 08:30:05,314 - __main__ - INFO - Starting bot...
+2025-01-22 08:30:07,020 - test_cases - ERROR - Bot stderr: 2025-01-22 08:30:05,315 - __main__ - INFO - Starting bot polling...
+2025-01-22 08:30:07,020 - test_cases - ERROR - Bot stderr: 2025-01-22 08:30:05,775 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:30:07,020 - test_cases - ERROR - Bot stderr: 2025-01-22 08:30:05,926 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:30:07,020 - test_cases - INFO - Bot startup detected in stderr
+2025-01-22 08:30:07,533 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:30:07,533 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:30:07,534 - test_cases - INFO - Bot startup completed successfully
+2025-01-22 08:30:08,107 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:30:08,107 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:30:08,107 - test_cases - INFO - Letting bot process handle updates...
+2025-01-22 08:30:13,108 - test_cases - INFO - Bot cleanup completed
+2025-01-22 08:30:13,109 - test_cases - INFO - Creating new application instance...
+2025-01-22 08:30:13,164 - test_cases - ERROR - Failed to verify test chat: TEST_CHAT_ID is not set
+2025-01-22 08:30:13,164 - test_cases - ERROR - Error creating application: Test chat not accessible
+2025-01-22 08:30:13,165 - __main__ - ERROR - Some tests failed
+2025-01-22 08:33:34,486 - test_cases - INFO - Initializing test configuration...
+2025-01-22 08:33:34,486 - __main__ - INFO - Starting test suite...
+2025-01-22 08:33:35,056 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:33:35,057 - test_cases - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:33:35,570 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:33:35,571 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:33:35,726 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:33:35,727 - test_cases - INFO - Successfully deleted webhook
+2025-01-22 08:33:35,880 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:33:35,881 - test_cases - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:33:45,909 - test_cases - INFO - Killing any existing bot processes...
+2025-01-22 08:33:45,943 - test_cases - INFO - Killing bot process: 90344
+2025-01-22 08:34:00,640 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:34:00,640 - test_cases - INFO - Bot process cleanup completed
+2025-01-22 08:34:00,640 - test_cases - INFO - Starting bot process...
+2025-01-22 08:34:02,678 - test_cases - INFO - Started bot process with PID: 93574
+2025-01-22 08:34:04,685 - test_cases - ERROR - Bot stderr: 2025-01-22 08:34:02,889 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:34:04,686 - test_cases - ERROR - Bot stderr: 2025-01-22 08:34:02,992 - __main__ - INFO - Starting bot...
+2025-01-22 08:34:04,686 - test_cases - ERROR - Bot stderr: 2025-01-22 08:34:02,992 - __main__ - INFO - Starting bot polling...
+2025-01-22 08:34:04,686 - test_cases - ERROR - Bot stderr: 2025-01-22 08:34:03,457 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:34:04,686 - test_cases - ERROR - Bot stderr: 2025-01-22 08:34:03,610 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:34:04,686 - test_cases - INFO - Bot startup detected in stderr
+2025-01-22 08:34:05,203 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:34:05,204 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:34:05,204 - test_cases - INFO - Bot startup completed successfully
+2025-01-22 08:34:05,715 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:34:05,715 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:34:05,715 - test_cases - INFO - Letting bot process handle updates...
+2025-01-22 08:34:10,717 - test_cases - INFO - Bot cleanup completed
+2025-01-22 08:34:10,717 - test_cases - INFO - Creating new application instance...
+2025-01-22 08:34:10,769 - test_cases - ERROR - Failed to verify test chat: TEST_CHAT_ID is not set
+2025-01-22 08:34:10,769 - test_cases - ERROR - Error creating application: Test chat not accessible
+2025-01-22 08:34:10,770 - __main__ - ERROR - Some tests failed
+2025-01-22 08:43:32,905 - test_cases - INFO - Initializing test configuration...
+2025-01-22 08:43:32,906 - __main__ - INFO - Starting test suite...
+2025-01-22 08:43:33,478 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:43:33,479 - test_cases - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:43:34,000 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:43:34,001 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:43:34,154 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:43:34,155 - test_cases - INFO - Successfully deleted webhook
+2025-01-22 08:43:34,306 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:43:34,307 - test_cases - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:43:44,357 - test_cases - INFO - Killing any existing bot processes...
+2025-01-22 08:43:44,389 - test_cases - INFO - Killing bot process: 93574
+2025-01-22 08:43:59,086 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:43:59,086 - test_cases - INFO - Bot process cleanup completed
+2025-01-22 08:43:59,086 - test_cases - INFO - Starting bot process...
+2025-01-22 08:44:01,130 - test_cases - INFO - Started bot process with PID: 104230
+2025-01-22 08:44:03,137 - test_cases - ERROR - Bot stderr: 2025-01-22 08:44:01,333 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:44:03,137 - test_cases - ERROR - Bot stderr: 2025-01-22 08:44:01,431 - __main__ - INFO - Starting bot...
+2025-01-22 08:44:03,137 - test_cases - ERROR - Bot stderr: 2025-01-22 08:44:01,431 - __main__ - INFO - Starting bot polling...
+2025-01-22 08:44:03,137 - test_cases - ERROR - Bot stderr: 2025-01-22 08:44:01,901 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:44:03,137 - test_cases - ERROR - Bot stderr: 2025-01-22 08:44:02,054 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:44:03,137 - test_cases - INFO - Bot startup detected in stderr
+2025-01-22 08:44:03,651 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:44:03,652 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:44:03,652 - test_cases - INFO - Bot startup completed successfully
+2025-01-22 08:44:04,161 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:44:04,162 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:44:04,162 - test_cases - INFO - Letting bot process handle updates...
+2025-01-22 08:44:09,165 - test_cases - INFO - Bot cleanup completed
+2025-01-22 08:44:09,165 - test_cases - INFO - Creating new application instance...
+2025-01-22 08:44:09,219 - test_cases - ERROR - Failed to verify test chat: TEST_CHAT_ID is not set
+2025-01-22 08:44:09,219 - test_cases - ERROR - Error creating application: Test chat not accessible
+2025-01-22 08:44:09,220 - __main__ - ERROR - Some tests failed
+2025-01-22 08:47:08,026 - test_cases - INFO - Initializing test configuration...
+2025-01-22 08:47:08,026 - __main__ - INFO - Starting test suite...
+2025-01-22 08:47:08,597 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:08,598 - test_cases - INFO - Successfully verified bot token. Bot: @Halakhotbot
+2025-01-22 08:47:09,123 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:09,123 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:47:09,281 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:47:09,281 - test_cases - INFO - Successfully deleted webhook
+2025-01-22 08:47:09,434 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getWebhookInfo "HTTP/1.1 200 OK"
+2025-01-22 08:47:09,434 - test_cases - INFO - Webhook successfully removed, letting bot process handle updates
+2025-01-22 08:47:19,439 - test_cases - INFO - Killing any existing bot processes...
+2025-01-22 08:47:19,473 - test_cases - INFO - Killing bot process: 104230
+2025-01-22 08:47:34,168 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:47:34,168 - test_cases - INFO - Bot process cleanup completed
+2025-01-22 08:47:34,168 - test_cases - INFO - Starting bot process...
+2025-01-22 08:47:36,209 - test_cases - INFO - Started bot process with PID: 107558
+2025-01-22 08:47:38,212 - test_cases - ERROR - Bot stderr: 2025-01-22 08:47:36,409 - __main__ - INFO - Using bot token from: default
+2025-01-22 08:47:38,212 - test_cases - ERROR - Bot stderr: 2025-01-22 08:47:36,510 - __main__ - INFO - Starting bot...
+2025-01-22 08:47:38,212 - test_cases - ERROR - Bot stderr: 2025-01-22 08:47:36,510 - __main__ - INFO - Starting bot polling...
+2025-01-22 08:47:38,212 - test_cases - ERROR - Bot stderr: 2025-01-22 08:47:36,985 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:38,213 - test_cases - ERROR - Bot stderr: 2025-01-22 08:47:37,139 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:47:38,213 - test_cases - INFO - Bot startup detected in stderr
+2025-01-22 08:47:38,737 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:38,737 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:47:38,738 - test_cases - INFO - Bot startup completed successfully
+2025-01-22 08:47:39,255 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:39,256 - test_cases - INFO - Bot is responding: @Halakhotbot
+2025-01-22 08:47:39,256 - test_cases - INFO - Letting bot process handle updates...
+2025-01-22 08:47:44,257 - test_cases - INFO - Bot cleanup completed
+2025-01-22 08:47:44,257 - test_cases - INFO - Creating new application instance...
+2025-01-22 08:47:44,804 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getChat "HTTP/1.1 200 OK"
+2025-01-22 08:47:44,805 - test_cases - INFO - Test chat verified: yossefhs
+2025-01-22 08:47:47,602 - test_cases - ERROR - Bot stderr: 2025-01-22 08:47:47,601 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getUpdates "HTTP/1.1 200 OK"
+2025-01-22 08:47:49,865 - test_cases - INFO - Application instance created and ready
+2025-01-22 08:47:49,865 - test_cases - INFO - Initializing application...
+2025-01-22 08:47:50,324 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:50,325 - test_cases - INFO - Starting application...
+2025-01-22 08:47:50,325 - telegram.ext.Application - INFO - Application started
+2025-01-22 08:47:50,325 - test_cases - INFO - Verifying bot connection...
+2025-01-22 08:47:50,477 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/getMe "HTTP/1.1 200 OK"
+2025-01-22 08:47:50,478 - test_cases - INFO - Connected to bot: @Halakhotbot
+2025-01-22 08:47:50,478 - test_cases - ERROR - Failed to initialize application: No command handlers registered
+2025-01-22 08:47:50,478 - test_cases - INFO - Starting thorough cleanup process...
+2025-01-22 08:47:50,478 - test_cases - INFO - Terminating main bot process: 107558
+2025-01-22 08:47:51,523 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk/deleteWebhook "HTTP/1.1 200 OK"
+2025-01-22 08:47:51,524 - test_cases - INFO - Cleared webhook and pending updates
+2025-01-22 08:47:56,583 - test_cases - INFO - All bot processes successfully terminated
+2025-01-22 08:47:56,583 - test_cases - INFO - Cleanup process completed
+2025-01-22 08:47:56,584 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2025-01-22 08:47:56,585 - telegram.ext.Application - INFO - Application.stop() complete
+2025-01-22 08:47:56,587 - __main__ - ERROR - Some tests failed
