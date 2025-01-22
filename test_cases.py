@@ -21,11 +21,13 @@ import psutil
 from asyncio import StreamReader
 
 # Global variables
-TEST_CHAT_ID: Optional[str] = None  # Will be set in main()
 BOT_TOKEN: str = os.environ.get("BOT_TOKEN", "")  # Type hint as str with empty default
+TEST_CHAT_ID: str = os.environ.get("TELEGRAM_TEST_CHAT_ID", "")  # Type hint as str with empty default
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN environment variable not set")
+if not TEST_CHAT_ID:
+    raise RuntimeError("TELEGRAM_TEST_CHAT_ID environment variable not set")
 
 # Global process management variables
 process: Optional[asyncio.subprocess.Process] = None
@@ -315,19 +317,214 @@ async def verify_bot_token(token: str) -> bool:
     
     return True  # Explicit return for successful case
 
+# Global variables
+application: Optional[Application] = None
+update_offset: int = 0
+
+async def get_bot_response(sent_message: Message, timeout: int = 30) -> Optional[Message]:
+    """Get bot's response using application's handler system."""
+    global application
+    
+    # Wait for application to be ready
+    retry_count = 0
+    max_retries = 3
+    while retry_count < max_retries:
+        if application and application.running:
+            break
+        logger.warning(f"Waiting for application (attempt {retry_count + 1}/{max_retries})")
+        await asyncio.sleep(2)
+        retry_count += 1
+        
+    if not application or not application.running:
+        logger.error("Application not ready after retries")
+        return None
+        
+    if not sent_message:
+        logger.error("No message provided")
+        return None
+        
+    logger.info(f"Waiting for response to message ID: {sent_message.message_id}")
+    
+    # Set up response handler
+    response_received = asyncio.Event()
+    response_message = None
+    
+    async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        nonlocal response_message
+        if (update.message and update.message.reply_to_message and 
+            update.message.reply_to_message.message_id == sent_message.message_id):
+            response_message = update.message
+            response_received.set()
+    
+    # Add temporary handler for this response
+    handler = MessageHandler(filters.TEXT & filters.REPLY, message_handler)
+    try:
+        if application and application.running:
+            application.add_handler(handler)
+            logger.info("Added temporary response handler")
+        else:
+            logger.error("Cannot add handler - application not ready")
+            return None
+            
+        # Wait for response with timeout
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            try:
+                await asyncio.wait_for(response_received.wait(), timeout=1.0)
+                if response_message:
+                    logger.info(f"Found matching response: {response_message.text}")
+                    return response_message
+            except asyncio.TimeoutError:
+                if not application.running:
+                    logger.error("Application stopped running while waiting for response")
+                    break
+                continue
+        
+        logger.error(f"No response received after {timeout}s for message ID: {sent_message.message_id}")
+        return None
+        
+    finally:
+        # Clean up temporary handler
+        try:
+            if application and application.running:
+                application.remove_handler(handler)
+                logger.info("Removed temporary response handler")
+        except Exception as e:
+            logger.error(f"Error removing handler: {e}")
+            # Continue even if handler removal fails
+
+async def handle_updates():
+    """Monitor application status and manage updates with conflict prevention."""
+    global application, update_offset
+    try:
+        logger.info("Starting application monitor...")
+        while application and application.running:
+            try:
+                # Get updates with proper offset management
+                updates = await application.bot.get_updates(
+                    offset=update_offset,
+                    timeout=30,
+                    allowed_updates=Update.ALL_TYPES
+                )
+                
+                if updates:
+                    update_offset = updates[-1].update_id + 1
+                    logger.info(f"Processed {len(updates)} updates, new offset: {update_offset}")
+                    
+                # Brief pause to prevent rapid polling
+                await asyncio.sleep(0.1)
+                
+            except TimedOut:
+                continue
+            except RetryAfter as e:
+                logger.warning(f"Rate limited, waiting {e.retry_after}s")
+                await asyncio.sleep(e.retry_after)
+            except NetworkError as e:
+                if "Conflict: terminated by other getUpdates request" in str(e):
+                    logger.warning("Update conflict detected, resetting connection...")
+                    await asyncio.sleep(1)
+                else:
+                    logger.error(f"Network error: {e}")
+                    await asyncio.sleep(1)
+            except Exception as e:
+                logger.error(f"Error getting updates: {e}")
+                await asyncio.sleep(1)
+                
+        logger.info("Application monitor stopped")
+    except Exception as e:
+        logger.error(f"Error in handle_updates: {e}")
+        raise
+
 async def run_test_cases(bot_token: str) -> List[TestResult]:
     """Run test cases for the Telegram bot and return results."""
-    global process, stdout_reader, stderr_reader, output_tasks, TEST_CHAT_ID
+    global process, stdout_reader, stderr_reader, output_tasks, TEST_CHAT_ID, application, update_offset
     
     # Initialize variables
     results: List[TestResult] = []
-    application = None
     
-    # Set TEST_CHAT_ID from environment
-    TEST_CHAT_ID = os.environ.get('TELEGRAM_TEST_CHAT_ID')
-    if not TEST_CHAT_ID:
-        logger.error("TELEGRAM_TEST_CHAT_ID environment variable is not set")
-        return [TestResult("Environment setup", False, "TELEGRAM_TEST_CHAT_ID not set")]
+    try:
+        # Initialize application with proper configuration
+        try:
+            application = (
+                Application.builder()
+                .token(bot_token)
+                .connect_timeout(30)
+                .read_timeout(30)
+                .write_timeout(30)
+                .pool_timeout(30)
+                .build()
+            )
+            
+            # Start application with timeout
+            logger.info("Initializing application...")
+            try:
+                await asyncio.wait_for(application.initialize(), timeout=30.0)
+                await asyncio.wait_for(application.start(), timeout=30.0)
+                
+                # Verify bot connection
+                me = await application.bot.get_me()
+                logger.info(f"Connected to bot: @{me.username}")
+                
+                # Wait for bot to be ready
+                await asyncio.sleep(2)
+                
+                # Run test cases
+                test_cases = [
+                    ("/start", None),  # Test start command
+                    ("/search viande", None),  # Test search with single word
+                    ("/search viande lait", None),  # Test search with multiple words
+                    ("/audio 2017-03-01-001", None)  # Test audio command
+                ]
+                
+                for command, _ in test_cases:
+                    try:
+                        logger.info(f"Testing command: {command}")
+                        message = await application.bot.send_message(
+                            chat_id=TEST_CHAT_ID,
+                            text=command
+                        )
+                        
+                        # Wait for and verify response
+                        response = await get_bot_response(message)
+                        if not response:
+                            results.append(TestResult(f"Command: {command}", False, "No response received"))
+                            continue
+                            
+                        success, error = await verify_response(response)
+                        results.append(TestResult(f"Command: {command}", success, error))
+                        
+                        # Wait between tests
+                        await asyncio.sleep(2)
+                        
+                    except Exception as e:
+                        logger.error(f"Error testing {command}: {e}")
+                        results.append(TestResult(f"Command: {command}", False, str(e)))
+                
+            except asyncio.TimeoutError:
+                raise RuntimeError("Application initialization timed out")
+            except Exception as e:
+                raise RuntimeError(f"Failed to initialize application: {e}")
+                
+        except Exception as e:
+            logger.error(f"Failed to create application: {e}")
+            return [TestResult("Application setup", False, str(e))]
+            
+    except Exception as e:
+        logger.error(f"Test execution failed: {e}")
+        return [TestResult("Test execution", False, str(e))]
+        
+    finally:
+        # Clean up application
+        if application:
+            try:
+                logger.info("Stopping application...")
+                await application.stop()
+                await application.shutdown()
+                logger.info("Application stopped successfully")
+            except Exception as e:
+                logger.error(f"Error stopping application: {e}")
+                
+    return results
     
     # Reset global variables
     process = None
@@ -996,21 +1193,25 @@ async def run_test_cases(bot_token: str) -> List[TestResult]:
         
         async def handle_updates():
             """Monitor application status and manage updates with conflict prevention."""
-            nonlocal update_offset
+            if not application or not application.running:
+                logger.error("Application not running")
+                return
+                
+            current_offset = 0
             try:
                 logger.info("Starting application monitor...")
                 while application and application.running:
                     try:
                         # Get updates with proper offset management
                         updates = await application.bot.get_updates(
-                            offset=update_offset,
+                            offset=current_offset,
                             timeout=30,
                             allowed_updates=Update.ALL_TYPES
                         )
                         
                         if updates:
-                            update_offset = updates[-1].update_id + 1
-                            logger.info(f"Processed {len(updates)} updates, new offset: {update_offset}")
+                            current_offset = updates[-1].update_id + 1
+                            logger.info(f"Processed {len(updates)} updates, new offset: {current_offset}")
                             
                         # Brief pause to prevent rapid polling
                         await asyncio.sleep(0.1)
@@ -1036,51 +1237,69 @@ async def run_test_cases(bot_token: str) -> List[TestResult]:
                 logger.error(f"Error in handle_updates: {e}")
                 raise
                     
-        async def get_bot_response(sent_message, timeout=30):
-            """Get bot's response using application's handler system."""
-            logger.info(f"Waiting for response to message ID: {sent_message.message_id}")
-            
-            # Ensure application is running
-            if not application or not application.running:
-                logger.error("Application not running!")
-                return None
-            
-            # Set up response handler
-            response_received = asyncio.Event()
-            response_message = None
-            
-            async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-                nonlocal response_message
-                if (update.message and update.message.reply_to_message and 
-                    update.message.reply_to_message.message_id == sent_message.message_id):
-                    response_message = update.message
-                    response_received.set()
-            
-            # Add temporary handler for this response
-            handler = MessageHandler(filters.TEXT & filters.REPLY, message_handler)
-            application.add_handler(handler)
-            
+        # Run test cases
+        test_cases = [
+            ("/start", None),  # Test start command
+            ("/search viande", "Test search response"),  # Test search with single word
+            ("/search viande lait", "Test search response"),  # Test search with multiple words
+            ("/audio 2017-03-01-001", "Test audio response"),  # Test audio command
+        ]
+        
+        results = []
+        for command, expected_response in test_cases:
             try:
+                logger.info(f"Testing command: {command}")
+                message = await application.bot.send_message(
+                    chat_id=TEST_CHAT_ID,
+                    text=command
+                )
+                
                 # Wait for response with timeout
                 start_time = time.time()
-                while time.time() - start_time < timeout:
-                    try:
-                        await asyncio.wait_for(response_received.wait(), timeout=1.0)
-                        if response_message:
-                            logger.info(f"Found matching response: {response_message.text}")
-                            return response_message
-                    except asyncio.TimeoutError:
-                        if not application.running:
-                            logger.error("Application stopped running while waiting for response")
+                response = None
+                
+                while time.time() - start_time < 30:  # 30 second timeout
+                    updates = await application.bot.get_updates(offset=update_offset)
+                    for update in updates:
+                        if (update.message and update.message.reply_to_message and 
+                            update.message.reply_to_message.message_id == message.message_id):
+                            response = update.message
                             break
-                        continue
+                    if response:
+                        break
+                    await asyncio.sleep(1)
+                
+                if not response:
+                    results.append(TestResult(f"Command: {command}", False, "No response received"))
+                    continue
+                    
+                success, error = await verify_response(response, expected_response)
+                results.append(TestResult(f"Command: {command}", success, error))
+                
+                if success:
+                    logger.info(f"Test passed for {command}")
+                else:
+                    logger.error(f"Test failed for {command}: {error}")
+                    
+                # Wait between tests to avoid rate limiting
+                await asyncio.sleep(1)
+                
+            except Exception as e:
+                logger.error(f"Error testing {command}: {e}")
+                results.append(TestResult(f"Command: {command}", False, str(e)))
                 
                 logger.error(f"No response received after {timeout}s for message ID: {sent_message.message_id}")
                 return None
                 
             finally:
                 # Clean up temporary handler
-                application.remove_handler(handler)
+                try:
+                    if application and application.running:
+                        application.remove_handler(handler)
+                        logger.info("Removed temporary response handler")
+                except Exception as e:
+                    logger.error(f"Error removing handler: {e}")
+                    # Continue even if handler removal fails
         
         # Test /start command
         logger.info("\nTesting /start command...")
@@ -1299,8 +1518,13 @@ async def run_test_cases(bot_token: str) -> List[TestResult]:
         # Ensure bot is properly shut down
         if application:
             try:
-                await application.stop()
+                logger.info("Stopping bot application...")
+                if application.updater and application.updater.running:
+                    await application.updater.stop()
+                if application.running:
+                    await application.stop()
                 await application.shutdown()
+                logger.info("Bot application stopped successfully")
             except Exception as e:
                 logger.error(f"Error during bot shutdown: {str(e)}")
                 # Don't return error here as main execution already completed

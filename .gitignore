@@ -1,0 +1,8 @@
+# Environment files
+env.sh
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
