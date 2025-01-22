@@ -22,7 +22,7 @@ from asyncio import StreamReader
 
 # Global variables
 TEST_CHAT_ID: Optional[str] = None  # Will be set in main()
-BOT_TOKEN: str = os.environ.get("BOT_TOKEN", "7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk")
+BOT_TOKEN: str = os.environ.get("BOT_TOKEN", "")  # Type hint as str with empty default
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN environment variable not set")
@@ -1127,19 +1127,28 @@ async def run_test_cases(bot_token: str) -> List[TestResult]:
             logger.error(f"Error in start command test: {e}")
             results.append(TestResult("Start command", False, str(e)))
             
-        # Test cases from search_test_cases.txt
+        # Test cases for search functionality
         search_tests = [
-            ("prière", ["priere", "prières"]),
+            # Basic keyword tests
+            ("viande", ["viande", "viandes", "basar"]),
+            ("chabbat", ["chabbat", "chabat", "shabbat", "shabat"]),
+            
+            # Multi-word tests with relevance scoring
+            ("viande lait", ["viande", "lait", "halavi"]),
+            ("chabbat allumer bougie", ["chabbat", "allumer", "bougie"]),
+            ("priere minyan synagogue", ["priere", "minyan", "synagogue"]),
+            
+            # Accent handling
+            ("prière", ["priere", "prières", "tefila"]),
             ("chabbât", ["chabbat", "chabat", "shabbat"]),
-            ("bénédiction", ["benediction", "berakha"]),
-            ("viande lait", ["viande", "lait"]),
-            ("beth-din", ["beth din"]),
+            ("bénédiction", ["benediction", "berakha", "bracha"]),
+            ("cachère", ["cacher", "casher", "kasher"]),
+            
+            # Special cases
+            ("beth-din", ["beth din", "beit din"]),
             ("d'un", ["d'un", "dun"]),
             ("l'eau", ["l'eau", "leau"]),
-            ("cachère", ["cacher", "casher", "kasher"]),
-            ("mezouza", ["mezuzah", "mezousa"]),
-            ("chabbat allumer", ["chabbat", "allumer"]),
-            ("priere minyan", ["priere", "minyan"])
+            ("mezouza", ["mezuzah", "mezousa", "מזוזה"])
         ]
         
         # Run search tests with proper cleanup
@@ -1306,8 +1315,8 @@ async def shutdown_bot(application):
 
 if __name__ == "__main__":
     try:
-        # Set default test chat ID if not provided
-        TEST_CHAT_ID = "39557300"  # Hardcode the test chat ID
+        # Get test chat ID from environment
+        TEST_CHAT_ID = os.environ.get("TELEGRAM_TEST_CHAT_ID")
         logger.info(f"Using test chat ID: {TEST_CHAT_ID}")
         
         # Validate test chat ID

@@ -33,7 +33,7 @@ async def verify_bot_token(token: str) -> bool:
 
 async def check_token():
     # Check current token
-    token = "7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk"
+    token = os.environ.get("BOT_TOKEN", "")
     print("\nChecking current token...")
     result = await verify_bot_token(token)
     

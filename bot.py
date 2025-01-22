@@ -59,7 +59,7 @@ ERROR_MESSAGES = {
 }
 
 # Bot configuration
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "7099400053:AAGpkQ978uhK1M3GnFwNoNH04QyNVb4ufsk")  # Use environment variable with fallback
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")  # Use environment variable with empty default
 QUESTIONS_DIR = Path("/home/ubuntu/questions_responses/questions")
 AUDIO_DIR = Path("/home/ubuntu/questions_responses/audio")
 MAPPING_FILE = QUESTIONS_DIR / "mapping.json"
@@ -432,6 +432,81 @@ async def audio(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         except Exception as send_error:
             logger.error(f"Error sending error message: {send_error}")
 
+async def handle_direct_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle direct text messages (non-commands) with search functionality."""
+    if not update.effective_message:
+        logger.error("Direct text message received without message")
+        return
+
+    # Extract query from user message
+    query = update.effective_message.text
+    logger.info(f"Processing direct text search: {query}")
+    
+    # Normalize and prepare keywords
+    keywords = [k for k in query.split() if len(k) >= 2]
+    if not keywords:
+        await update.effective_message.reply_text(
+            "❌ Veuillez entrer au moins un mot-clé de 2 caractères minimum"
+        )
+        return
+
+    try:
+        # Load questions and score them
+        with open(MAPPING_FILE) as f:
+            data = json.load(f)
+            questions = data.get("questions", [])
+
+        scored_results = []
+        for q in questions:
+            text = f"{q['question']} {q['author']} {q['date']}"
+            score, matches = calculate_search_score(text, keywords)
+            if score > 0:
+                scored_results.append((q, score, matches))
+        
+        # Sort by score (highest first)
+        scored_results.sort(key=lambda x: x[1], reverse=True)
+        results = [r[0] for r in scored_results]
+
+        if not results:
+            await update.effective_message.reply_text(
+                "❌ Aucun résultat trouvé",
+                parse_mode='HTML'
+            )
+            return
+
+        # Format and send results (limit to first 5)
+        for q, score, matches in scored_results[:5]:
+            # Format matches for display
+            match_text = "Termes trouvés: " + ", ".join(matches) if matches else ""
+            
+            # Create response with full question text and highlighted matches
+            response = (
+                f"📅 {q['date']} - 👤 {q['author']}\n\n"
+                f"❓ {q['question']}\n\n"
+                f"🎵 {len(q['audio_files'])} réponse(s) audio\n"
+                f"🔍 Score: {score}\n"
+                f"🏷️ {match_text}\n\n"
+                f"Pour écouter la réponse, utilisez:\n"
+                f"/audio {q['id']}"
+            )
+            
+            await update.effective_message.reply_text(
+                response,
+                parse_mode='HTML'
+            )
+
+        if len(results) > 5:
+            await update.effective_message.reply_text(
+                f"... et {len(results) - 5} autres résultats",
+                parse_mode='HTML'
+            )
+
+    except Exception as e:
+        logger.error(f"Error in direct text search: {e}")
+        await update.effective_message.reply_text(
+            "❌ Une erreur s'est produite lors de la recherche"
+        )
+
 def main() -> None:
     """Start the bot."""
     # Create the Application with proper configuration
@@ -452,6 +527,9 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("search", search))
     application.add_handler(CommandHandler("audio", audio))
+    
+    # Add direct text message handler (before unknown command handler)
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_direct_text))
     
     # Add error handlers
     application.add_error_handler(error_handler)
