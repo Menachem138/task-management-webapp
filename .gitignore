@@ -1,0 +1,40 @@
+# Environment and system files
+.env*
+.bash*
+.cache/
+.config/
+.docker/
+.local/
+.npm/
+.nvm/
+.pki/
+.pyenv/
+.rustup/
+.ssh/
+.sudo_as_admin_successful
+.tmux.conf
+.fly/
+.cargo/
+
+# Build and runtime files
+__pycache__/
+*.pyc
+node_modules/
+dist/
+build/
+.browser_data_dir/
+
+# Backup and temporary files
+backup/
+backups/
+test*/
+screenshots/
+full_outputs/
+attachments/
+audio/
+*.bak
+*.log
+
+# Local development files
+*.local
+.DS_Store

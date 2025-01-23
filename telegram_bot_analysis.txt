@@ -1,0 +1,68 @@
+Telegram Bot Search Implementation Analysis
+
+1. Current Search Features to Port
+- Accent normalization via normalizeString()
+- Keyword splitting and filtering
+- Multi-word search with OR logic
+- Search across question text, author, and date
+- Synonym support for religious terms
+
+2. Required Bot Commands
+/search <query> - Search questions with accent-insensitive matching
+/recent - Show recent questions
+/audio <id> - Get audio response for a specific question
+/help - Show available commands
+
+3. Search Algorithm Port
+```python
+def normalize_string(text: str) -> str:
+    # Port of frontend normalizeString() function
+    normalized = unicodedata.normalize('NFD', text)
+    normalized = re.sub(r'[\u0300-\u036f]', '', normalized)
+    normalized = normalized.lower()
+    normalized = re.sub(r'[^a-z0-9\s]', ' ', normalized)
+    normalized = re.sub(r'\s+', ' ', normalized)
+    return normalized.strip()
+
+def search_questions(query: str, questions: List[Dict]) -> List[Dict]:
+    keywords = [k for k in query.lower().split() if k]
+    if not keywords:
+        return []
+    
+    results = []
+    for q in questions:
+        text = normalize_string(f"{q['question']} {q['author']} {q['date']}")
+        if any(normalize_string(k) in text for k in keywords):
+            results.append(q)
+    return results
+```
+
+4. Audio File Handling
+- Use Telegram's native audio player for opus files
+- Cache frequently accessed audio files
+- Implement progressive loading for large files
+
+5. Error Handling
+- Implement retries for API calls
+- Log errors with context
+- Send user-friendly error messages
+- Monitor bot health
+
+6. Performance Considerations
+- Cache search results
+- Implement rate limiting
+- Use connection pooling
+- Monitor response times
+
+7. Security Measures
+- Validate user inputs
+- Rate limit per user
+- Log access patterns
+- Secure audio file access
+
+8. Next Steps
+- Set up bot framework
+- Implement search logic
+- Add audio playback
+- Add monitoring
+- Test with sample data

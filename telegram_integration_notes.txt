@@ -1,0 +1,66 @@
+Telegram Bot Integration Analysis
+
+1. Current Application Structure
+- FastAPI backend with static file serving
+- React frontend with search and audio playback
+- Questions stored in mapping.json
+- Audio files served from /audio directory
+
+2. Existing Endpoints
+- GET /questions/mapping.json: Retrieves all questions
+- GET /audio/{filename}: Serves audio files
+- POST /upload-whatsapp: Handles new WhatsApp exports
+
+3. Data Structure
+Questions format:
+{
+  "id": string,
+  "date": string,
+  "author": string,
+  "question": string,
+  "audio_files": string[],
+  "tags": string[]
+}
+
+4. Required Bot Features
+a) Search Functionality
+- Implement text search similar to web app
+- Return matching questions with audio links
+- Support accent-insensitive search
+
+b) Audio Handling
+- Send audio files directly through Telegram
+- Support inline audio playback
+- Handle large audio files appropriately
+
+c) Command Structure
+Proposed commands:
+/search [query] - Search questions
+/recent - Show recent questions
+/help - Show available commands
+/audio [question_id] - Get audio response
+
+5. Technical Requirements
+- Python-telegram-bot library
+- Async handlers for better performance
+- Redis for caching frequent searches
+- Rate limiting for API calls
+- Error handling and logging
+
+6. Integration Points
+- Reuse existing search logic
+- Share audio file serving
+- Maintain consistent data access
+
+7. Security Considerations
+- Validate Telegram webhook
+- Implement user authentication
+- Rate limit requests
+- Secure audio file access
+
+8. Next Steps
+- Set up Telegram bot credentials
+- Implement basic command handlers
+- Test search functionality
+- Add audio file support
+- Deploy bot alongside existing app

@@ -1,0 +1,76 @@
+Current Search Implementation Analysis
+
+1. Search Algorithm
+- Uses normalizeString() for accent/diacritic removal
+- Splits search term into keywords
+- Uses OR logic for multiple keywords
+- Partial word matching with 2-char minimum
+- Searches across question text, author, and date fields
+
+2. Areas for Improvement
+a) Multi-word Search Precision
+- Current: OR logic between words (too permissive)
+- Needed: Ranking system based on number of matched words
+- Implementation: Add score calculation for each result
+
+b) Term Highlighting
+- Current: No highlighting of matched terms
+- Needed: Yellow background for matched terms
+- Implementation: Mark matched terms with <mark> tags
+
+c) Synonym Handling
+- Current: Basic synonym dictionary
+- Potential: Expand dictionary and improve matching logic
+- Consider: Fuzzy matching for similar terms
+
+3. Proposed Changes
+a) Search Logic Updates
+```typescript
+interface SearchResult {
+  question: Question;
+  score: number;
+  matches: string[];
+}
+
+function calculateSearchScore(question: Question, keywords: string[]): SearchResult {
+  const searchText = normalizeString(`${question.question} ${question.author} ${question.date}`);
+  const matches = [];
+  let score = 0;
+  
+  for (const keyword of keywords) {
+    if (searchInText(searchText, keyword)) {
+      score++;
+      matches.push(keyword);
+    }
+  }
+  
+  return { question, score, matches };
+}
+```
+
+b) Result Highlighting
+```typescript
+function highlightMatches(text: string, matches: string[]): string {
+  let highlighted = text;
+  for (const match of matches) {
+    const regex = new RegExp(`(${escapeRegExp(match)})`, 'gi');
+    highlighted = highlighted.replace(regex, '<mark>$1</mark>');
+  }
+  return highlighted;
+}
+```
+
+4. Implementation Steps
+1. Add SearchResult interface
+2. Implement scoring system
+3. Sort results by score
+4. Add term highlighting
+5. Update UI to display highlighted terms
+6. Expand synonym dictionary
+
+5. Testing Plan
+- Test with various multi-word queries
+- Verify score-based sorting
+- Check highlight rendering
+- Test synonym matching
+- Validate accent handling

@@ -1,0 +1,128 @@
+Message Deletion Investigation
+
+1. Target Message Information
+- Date: 02/03/2017
+- Author: Yossef Haim
+- Content: "*important a partir de maintenant nous ne parlons plus entre nous ici je rajoute qlq*"
+- Found in multiple locations:
+  * _chat.txt (original source)
+  * mapping.json (multiple instances)
+  * mapping_cleaned.json
+
+2. Data Structure Analysis
+- Multiple mapping.json files found:
+  * /home/ubuntu/questions_responses/questions/mapping.json
+  * /home/ubuntu/mapping.json
+  * /home/ubuntu/QnAWebApp/dist/mapping.json
+  * /home/ubuntu/QnAWebApp/public/mapping.json
+
+- Target Message Details:
+  * Found in _chat.txt at line 161
+  * Has associated question file: 202017-03-02-084.txt
+  * Appears in mapping.json with no audio files
+  * Message ID format: YYYYMM-DD-XXX (e.g., 202017-03-02-084)
+
+- Related Files:
+  * Question text files in questions_responses/questions/
+  * Audio files referenced in mapping.json
+  * Frontend components in QnAWebApp/src/
+  * Backend handlers in whatsapp_backend/app/
+
+3. Technical Requirements
+- Need to identify all messages before 02/03/2017 01:24:18
+- Must preserve message ID structure and relationships
+- Should handle both audio files and text content
+- Consider creating backup before modifications
+- Previous API URL: https://whatsapp-conversation-organizer-w1c0t8nc-api.devinapps.com
+- Current API URL: https://app-tnegmvca.fly.dev
+- Environment variable VITE_API_URL was updated in .env.production
+
+2. Search Functionality Changes
+a) Original Implementation (Saturday 21:42):
+- Basic search with normalizeString() for accent removal
+- Simple keyword matching
+- No term highlighting
+- Basic synonym dictionary
+
+b) Recent Changes:
+- Added multi-word search precision with scoring system
+- Implemented term highlighting with yellow background
+- Expanded synonym dictionary
+- Added ranking system based on matched keywords
+- Modified partial word matching logic
+
+3. Audio Playback Changes
+a) Original Implementation (Saturday 21:42):
+- Basic audio playback using Audio API
+- No pause functionality
+- Simple error handling
+
+b) Recent Changes:
+- Added pause functionality
+- Enhanced error handling
+- Added audio playback controls
+
+4. File Structure
+- Frontend: QnAWebApp directory
+- Backend: whatsapp_backend directory
+- Data: questions_responses directory
+
+5. Deployment Configuration
+- Previous: Deployed on devinapps.com
+- Current: Deployed on fly.io
+- Docker configuration with volume mount for persistence
+
+6. Required Actions to Restore
+a) API Configuration:
+- Revert VITE_API_URL in .env.production
+- Update deployment configuration
+
+b) Search Functionality:
+- Revert search implementation in App.tsx
+- Restore original synonym dictionary
+- Remove term highlighting
+
+c) Audio Playback:
+- Simplify audio playback code
+- Remove pause functionality
+- Restore basic error handling
+
+7. Testing Requirements
+- Verify audio playback works with restored API URL
+- Test basic search functionality
+- Ensure questions display correctly
+- Validate file upload functionality
+
+8. Message Analysis Results
+a) Deployed Application (Live Site):
+   - Total questions: 6865
+   - Contains all messages including March 1st administrative content
+   - Accessible at https://whatsapp-conversation-organizer-w1c0t8nc.devinapps.com
+
+b) Local Mapping Files:
+   1. Public/Dist Version (2.1MB):
+      - Total questions: 6085
+      - March 1st messages: 83
+      - Date range: 01/03/2017 to 13/07/2017
+
+   2. Questions Directory Version (1.1MB):
+      - Total questions: 3492
+      - March 1st messages: 45
+      - Date range: 01/03/2017 to 13/07/2017
+
+c) Monthly Distribution (from questions directory version):
+   * March 2017: 548 messages
+   * April 2017: 962 messages
+   * May 2017: 983 messages
+   * June 2017: 717 messages
+   * July 2017: 282 messages
+
+9. Early Messages Analysis
+- First messages (March 1st, 2017) are administrative:
+  * Group setup discussions: "Je pense que le rav dois commencer a répondre beaucoup moins..."
+  * Payment configuration: "Et évidemment plus sur celle ci qui est la nouvelle pour les inscrits qui ont payer..."
+  * Group management messages
+- Messages to be removed: All content before 02/03/2017 01:24:18
+- Current deployment status: Working URL confirmed at https://whatsapp-conversation-organizer-w1c0t8nc.devinapps.com
+
+Note: Significant discrepancy found between deployed site (6865 questions) and local versions (6085/3492 questions) requires investigation before proceeding with message removal.

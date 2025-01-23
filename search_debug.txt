@@ -1,0 +1,37 @@
+Search Functionality Investigation
+
+1. Current Implementation:
+- normalizeString() removes accents and converts to lowercase
+- handleSearch() splits search term into keywords
+- Filters questions based on ALL keywords matching
+- Searches across question text, author, and date
+
+2. Potential Issues:
+- Multi-word search might be too strict (requires all words to match)
+- Accent normalization might be too aggressive
+- No partial word matching
+- No fuzzy search capability
+- Search might not handle special characters well
+
+3. Test Cases Needed:
+- Single word with accents
+- Multiple words
+- Partial words
+- Words split across lines
+- Special characters
+- Date format variations
+
+4. Data Flow:
+questions[] <- mapping.json
+↓
+normalizeString()
+↓
+handleSearch()
+↓
+filteredQuestions[]
+
+5. Next Steps:
+- Add console.log statements to debug search
+- Test with various search patterns
+- Verify data loading from mapping.json
+- Check normalized string outputs

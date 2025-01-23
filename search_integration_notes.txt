@@ -1,0 +1,118 @@
+# Search Integration Analysis
+
+## Current Web Implementation (App.tsx)
+1. Search Features:
+   - Real-time search without commands
+   - Accent/diacritic normalization via normalizeString()
+   - Keyword splitting with no minimum length
+   - OR logic between keywords
+   - Searches across question text, author, and date
+   - Direct audio playback integration
+
+2. Search Algorithm:
+```typescript
+const handleSearch = (term: string) => {
+  const keywords = term.toLowerCase().split(/\s+/).filter(k => k.length > 0)
+  const filtered = questions.filter(q => {
+    const text = normalizeString(`${q.question} ${q.author} ${q.date}`)
+    return keywords.some(k => text.includes(normalizeString(k)))
+  })
+}
+```
+
+## Current Bot Implementation (bot.py)
+1. Command-based Features:
+   - Requires /search command
+   - Basic keyword matching
+   - Accent normalization implemented
+   - Audio file delivery via /audio command
+   - Synonym support via SYNONYMS dictionary
+
+2. Search Algorithm:
+```python
+def calculate_search_score(text: str, keywords: List[str]) -> Tuple[int, List[str]]:
+    normalized_text = normalize_string(text)
+    matches = []
+    score = 0
+    for keyword in keywords:
+        variations = get_word_variations(keyword)
+        for variation in variations:
+            if normalize_string(variation) in normalized_text:
+                score += 1
+                matches.append(variation)
+    return score, matches
+```
+
+## Integration Requirements
+1. Direct Message Handling:
+   - Remove command requirement
+   - Add MessageHandler for all text messages
+   - Skip command-prefixed messages
+   - Use same normalizeString() logic as web
+
+2. Search Improvements:
+   - Port web app's search implementation
+   - Add relevance scoring:
+     * More matching keywords = higher score
+     * Exact matches score higher than partial matches
+     * Question text matches score higher than author/date
+   - Return top 5 most relevant results
+
+3. Result Formatting:
+   - Show question text with matched keywords
+   - Include audio file buttons
+   - Add relevance score indicator
+   - Support pagination if needed
+
+4. Audio Integration:
+   - Send audio files directly in chat
+   - Add inline keyboard for multiple audio responses
+   - Include question context with audio
+
+## Technical Requirements
+1. Dependencies:
+   - python-telegram-bot
+   - unicodedata for accent normalization
+   - json for data handling
+
+2. Data Structure:
+   - Use existing mapping.json
+   - Cache frequent searches
+   - Store user preferences
+
+3. Error Handling:
+   - Handle network issues
+   - Manage rate limits
+   - Provide French error messages
+
+## Testing Strategy
+1. Unit Tests:
+   - Search algorithm accuracy
+   - Accent normalization
+   - Scoring system
+   - Result formatting
+
+2. Integration Tests:
+   - Message handling
+   - Audio file delivery
+   - Error scenarios
+   - Performance under load
+
+## Implementation Notes
+1. Search Logic:
+   - Port normalizeString() from web app
+   - Implement scoring system similar to search_improvement_analysis.txt
+   - Add synonym support from existing dictionary
+   - Optimize for French language queries
+
+2. Message Handling:
+   - Add new MessageHandler for non-command text
+   - Implement search without command prefix
+   - Format responses with inline keyboards
+   - Add pagination support for multiple results
+
+3. Audio Delivery:
+   - Use existing audio file handling
+   - Add inline keyboard buttons
+   - Include question context
+   - Support multiple audio responses
