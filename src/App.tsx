@@ -14,7 +14,7 @@ interface Question {
   tags: string[]
 }
 
-// Normalize string for comparison (remove accents, lowercase, etc.)
+// Utility functions
 function normalizeString(str: string): string {
   return str.normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "") // Remove combining diacritical marks
@@ -22,6 +22,91 @@ function normalizeString(str: string): string {
     .replace(/[^a-z0-9\s]/g, " ") // Replace special chars with space
     .replace(/\s+/g, " ") // Normalize spaces
     .trim();
+}
+
+function escapeRegExp(str: string): string {
+  return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
+interface SearchResult {
+  question: Question;
+  score: number;
+  matches: string[];
+}
+
+function calculateSearchScore(question: Question, keywords: string[]): SearchResult {
+  const text = normalizeString(`${question.question} ${question.author} ${question.date}`);
+  let score = 0;
+  const matches: string[] = [];
+  const matchTypes = new Map<string, 'exact' | 'partial'>();
+
+  // Check each keyword
+  for (const keyword of keywords) {
+    const normalizedKeyword = normalizeString(keyword);
+    
+    // Skip very short keywords
+    if (normalizedKeyword.length < 2) continue;
+
+    // Check for exact word boundary match
+    const wordBoundaryRegex = new RegExp(`\\b${escapeRegExp(normalizedKeyword)}\\b`, 'i');
+    const exactMatch = text.match(wordBoundaryRegex);
+    
+    // Check for partial word match (must be at least 3/4 of the keyword length)
+    const minPartialLength = Math.max(3, Math.ceil(normalizedKeyword.length * 0.75));
+    const partialRegex = new RegExp(`\\b\\w*${escapeRegExp(normalizedKeyword)}\\w*\\b`, 'i');
+    const partialMatch = !exactMatch && text.match(partialRegex);
+
+    if (exactMatch) {
+      // Much higher base score for exact matches
+      score += 50;
+      matches.push(keyword);
+      matchTypes.set(keyword, 'exact');
+    } else if (partialMatch && normalizedKeyword.length >= minPartialLength) {
+      // Only count substantial partial matches
+      const matchLength = partialMatch[0].length;
+      const lengthRatio = normalizedKeyword.length / matchLength;
+      // Score based on how close the match length is to keyword length
+      score += Math.max(1, 5 * lengthRatio);
+      matches.push(keyword);
+      matchTypes.set(keyword, 'partial');
+    }
+  }
+
+  // Super high bonus for having all keywords match exactly
+  const exactMatchCount = Array.from(matchTypes.values()).filter(t => t === 'exact').length;
+  if (exactMatchCount === keywords.length && keywords.length > 1) {
+    score *= 10; // Massive bonus for matching all keywords exactly
+  } else if (exactMatchCount > 0) {
+    // Still good bonus for some exact matches
+    score *= Math.pow(2, exactMatchCount);
+  }
+
+  // Additional bonus for matching multiple keywords
+  if (matches.length > 1) {
+    // Higher quadratic bonus for multiple matches
+    score += Math.pow(matches.length, 3) * 20;
+  }
+
+  // Small bonus for questions with audio responses
+  if (question.audio_files.length > 0) {
+    score += 2;
+  }
+
+  // Date recency bonus (small factor)
+  try {
+    const date = new Date(question.date.split('/').reverse().join('-'));
+    const now = new Date();
+    const monthsOld = (now.getFullYear() - date.getFullYear()) * 12 + now.getMonth() - date.getMonth();
+    score += Math.max(0, 1 - monthsOld / 120); // Small bonus that decreases with age
+  } catch (e) {
+    // Ignore date parsing errors
+  }
+
+  return {
+    question,
+    score,
+    matches
+  };
 }
 
 function App() {
@@ -59,13 +144,89 @@ function App() {
       return
     }
 
-    const filtered = questions.filter(q => {
-      const text = normalizeString(`${q.question} ${q.author} ${q.date}`)
-      return keywords.some(k => text.includes(normalizeString(k)))
-    })
+    // Create a Set to track unique questions
+    const seen = new Set<string>()
     
-    setFilteredQuestions(filtered)
+    // Calculate scores for all questions
+    const scored = questions
+      .map(q => {
+        // Skip if we've already seen this question
+        if (seen.has(q.id)) return null
+        seen.add(q.id)
+        
+        const result = calculateSearchScore(q, keywords)
+        return result.score > 0 ? result : null
+      })
+      .filter((result): result is SearchResult => result !== null)
+      .sort((a, b) => {
+        // First sort by score
+        const scoreDiff = b.score - a.score
+        if (scoreDiff !== 0) return scoreDiff
+        
+        // Then by number of exact matches
+        const aExactMatches = a.matches.filter(m => 
+          normalizeString(a.question.question).includes(normalizeString(m))).length
+        const bExactMatches = b.matches.filter(m => 
+          normalizeString(b.question.question).includes(normalizeString(m))).length
+        if (aExactMatches !== bExactMatches) return bExactMatches - aExactMatches
+        
+        // Finally by date (most recent first)
+        return new Date(b.question.date).getTime() - new Date(a.question.date).getTime()
+      })
+      .map(result => ({
+        ...result.question,
+        question: highlightMatches(result.question.question, result.matches)
+      }))
+    
+    setFilteredQuestions(scored)
     setPage(1)
+  }
+
+  // Escape special regex characters
+  const escapeRegExp = (str: string): string => {
+    return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+  }
+
+  const highlightMatches = (text: string, matches: string[]): string => {
+    let highlighted = text
+    const processedMatches = new Set<string>() // Track processed matches to avoid duplicates
+    
+    // Sort matches by length (longest first) to handle overlapping matches
+    const sortedMatches = [...matches].sort((a, b) => b.length - a.length)
+    
+    for (const match of sortedMatches) {
+      if (processedMatches.has(match)) continue
+      
+      const normalizedText = normalizeString(text)
+      const normalizedMatch = normalizeString(match)
+      const escapedMatch = escapeRegExp(normalizedMatch)
+      
+      // Use strict word boundaries for exact word matches only
+      const regex = new RegExp(`\\b${escapedMatch}\\b`, 'gi')
+      const positions: Array<{start: number, end: number, text: string}> = []
+      
+      let matchResult
+      while ((matchResult = regex.exec(normalizedText)) !== null) {
+        const originalWord = text.slice(matchResult.index, matchResult.index + matchResult[1].length)
+        positions.push({
+          start: matchResult.index,
+          end: matchResult.index + matchResult[1].length,
+          text: originalWord
+        })
+      }
+      
+      // Apply highlighting from end to start to maintain indices
+      positions.reverse().forEach(({start, end, text}) => {
+        highlighted = 
+          highlighted.slice(0, start) +
+          `<mark>${text}</mark>` +
+          highlighted.slice(end)
+      })
+      
+      processedMatches.add(match)
+    }
+    
+    return highlighted
   }
 
   const playAudio = (audioFile: string) => {
@@ -194,23 +355,95 @@ function App() {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <p className="whitespace-pre-wrap text-base">{q.question}</p>
+                  <p className="whitespace-pre-wrap text-base" dangerouslySetInnerHTML={{ __html: q.question }}></p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {q.audio_files.map((audio, index) => (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {q.audio_files.map((audio, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => playAudio(audio)}
+                        >
+                          <Volume2 className="h-4 w-4 mr-2" />
+                          Écouter la réponse {index + 1}
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={async () => {
+                            if (confirm(`Voulez-vous vraiment supprimer la réponse audio ${index + 1} ?`)) {
+                              try {
+                                const response = await fetch(
+                                  `${import.meta.env.VITE_API_URL}/audio/${q.id}/${index}`,
+                                  { method: 'DELETE' }
+                                )
+                                if (!response.ok) throw new Error('Erreur lors de la suppression')
+                                
+                                // Update local state
+                                const updatedQuestions = questions.map(question => 
+                                  question.id === q.id
+                                    ? {
+                                        ...question,
+                                        audio_files: question.audio_files.filter((_, i) => i !== index)
+                                      }
+                                    : question
+                                )
+                                setQuestions(updatedQuestions)
+                                setFilteredQuestions(
+                                  filteredQuestions.map(question =>
+                                    question.id === q.id
+                                      ? {
+                                          ...question,
+                                          audio_files: question.audio_files.filter((_, i) => i !== index)
+                                        }
+                                      : question
+                                  )
+                                )
+                              } catch (error) {
+                                console.error('Erreur:', error)
+                                alert('Erreur lors de la suppression de la réponse audio')
+                              }
+                            }
+                          }}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    {q.audio_files.length === 0 && (
+                      <span className="text-gray-500">Pas de fichier audio disponible</span>
+                    )}
+                  </div>
+                  <div className="flex justify-end">
                     <Button
-                      key={index}
-                      variant="outline"
+                      variant="destructive"
                       size="sm"
-                      onClick={() => playAudio(audio)}
+                      onClick={async () => {
+                        if (confirm('Voulez-vous vraiment supprimer cette question et toutes ses réponses ?')) {
+                          try {
+                            const response = await fetch(
+                              `${import.meta.env.VITE_API_URL}/questions/${q.id}`,
+                              { method: 'DELETE' }
+                            )
+                            if (!response.ok) throw new Error('Erreur lors de la suppression')
+                            
+                            // Update local state
+                            const updatedQuestions = questions.filter(question => question.id !== q.id)
+                            setQuestions(updatedQuestions)
+                            setFilteredQuestions(filteredQuestions.filter(question => question.id !== q.id))
+                            setTotalQuestions(prev => prev - 1)
+                          } catch (error) {
+                            console.error('Erreur:', error)
+                            alert('Erreur lors de la suppression de la question')
+                          }
+                        }
+                      }}
                     >
-                      <Volume2 className="h-4 w-4 mr-2" />
-                      Écouter la réponse {index + 1}
+                      Supprimer la question
                     </Button>
-                  ))}
-                  {q.audio_files.length === 0 && (
-                    <span className="text-gray-500">Pas de fichier audio disponible</span>
-                  )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
