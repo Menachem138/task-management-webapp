@@ -1,0 +1,1 @@
+# Questions et Réponses Audio\n\nCe dossier contient l'organisation des questions et leurs réponses audio correspondantes.\n\n## Structure\n- questions/ : Contient les questions au format texte\n- audio/ : Contient les fichiers audio correspondants

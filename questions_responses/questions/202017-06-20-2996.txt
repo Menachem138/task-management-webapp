@@ -1,0 +1,10 @@
+Question 202017-06-20-2996:
+
+Date: 20/06/2017
+Auteur: Emmanuel Mergui
+
+Question:
+Dans ce cas faut-il d'abord essayer de trouver des machlimim et seulement si in ne trouve pas on finira à moins de 10, ou le hazan ne doit pas s'occuper et avancer ?
+
+Fichiers audio:
+- 2017-06-20-AUDIO-00005090.opus
